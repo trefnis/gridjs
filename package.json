@@ -1,0 +1,31 @@
+{
+  "name": "gridjs",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "browserify spec/*.js -d -t [ babelify --plugins=babel-plugin-transform-es2015-modules-commonjs ] > spec/bundled/specs.js && jasmine spec/bundled/specs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trefnis/gridjs.git"
+  },
+  "keywords": [
+    "grid",
+    "layout",
+    "masonry",
+    "bin-packing"
+  ],
+  "author": "Michał Olchawa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/trefnis/gridjs/issues"
+  },
+  "homepage": "https://github.com/trefnis/gridjs",
+  "devDependencies": {
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.1.20",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "jasmine": "^2.3.2"
+  }
+}
