@@ -6,17 +6,21 @@ var sanitize = require('sanitize-filename');
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, '../../sample-data/')));
+var datasetsPath = path.join(__dirname, '../../datasets/');
+
+app.use('/data', express.static(datasetsPath));
+app.use(express.static(path.join(__dirname, '../frontend')));
+app.use('/node_modules', express.static(path.join(__dirname, '../node_modules')));
 app.use(bodyParser.json());
 
-app.post('/:name', function(req, res) {
+app.post('/data/:name', function(req, res) {
     var name = sanitize(req.params.name);
 
     if (!req.body || !name) {
         return res.status(400).end();
     }
 
-    var filepath = path.join(__dirname, '../../sample-data/', name);
+    var filepath = path.join(datasetsPath, name);
     var content = JSON.stringify(req.body) + '\n';
 
     fs.writeFile(filepath, content, function(err) {
