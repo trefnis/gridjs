@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"></link>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.css"></link>
+    <link rel="stylesheet" href="styles/styles.css"></link>
     <script src="node_modules/angular/angular.js"></script>
     <script src="node_modules/angular-ui-router/build/angular-ui-router.js"></script>
     <script src="node_modules/angular-ui-bootstrap/ui-bootstrap.js"></script>
@@ -18,9 +19,13 @@
     <script src="config.js"></script>
     <script src="routing.js"></script>
 
+    <script src="components/dataset/datasetRepository.js"></script>
+    <script src="components/dialog/dialog.js"></script>
+    <script src="components/messages/messages.js"></script>
     <script src="components/navigation/navigation.js"></script>
 
     <script src="main-menu/main-menu.js"></script>
+    <script src="main-menu/load-set-dialog.js"></script>
     <script src="comparison/comparison.js"></script>
     <script src="comparison/comparison-controller.js"></script>
     <script src="elements-editor/elements-editor.js"></script>
@@ -31,7 +36,8 @@
     <script src="layout-editor/layout-editor-controller.js"></script>
 </head>
 <body ng-app="gridjs-test">
-    <div main-menu></div>
-    <div ui-view></div>
+    <messages></messages>
+    <div class="main-menu" main-menu></div>
+    <div class="content" ui-view></div>
 </body>
 </html>

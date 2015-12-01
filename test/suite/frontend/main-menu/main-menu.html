@@ -1,0 +1,31 @@
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-lg-8" 
+         navigation 
+         nav-tabs="mainMenu.navTabs"></nav>
+    <div class="col-lg-3 text-right">
+      <form>
+        <div class="input-group">
+          <span class="input-group-addon">Data set name:</span>
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="enter a name"
+                   ng-model="mainMenu.currentSet.name">
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-1 text-right">
+      <div class="btn-group" uib-dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-default" 
+                  uib-dropdown-toggle>
+              Menu <span class="caret"></span>
+          </button>
+          <ul class="uib-dropdown-menu dropdown-menu-right">
+            <li><a ng-click="mainMenu.newSet()" href="">New</a></li>
+            <li><a ng-click="mainMenu.saveCurrentSet()" href="">Save current set</a></li>
+            <li><a ng-click="mainMenu.loadSet()" href="">Load set</a></li>
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>

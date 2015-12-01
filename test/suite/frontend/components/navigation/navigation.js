@@ -33,7 +33,7 @@ NavigationController.prototype.navigate = function(state) {
 
 NavigationController.prototype.updateStatesActivity = function() {
     this.navTabs.forEach(function(tab) {
-        tab.isActive = this.$state.is(tab.state);
+        tab.isActive = this.$state.includes(tab.state);
     }.bind(this));
 };
 

@@ -1,0 +1,21 @@
+.main-menu {
+    padding: 10px 0;
+    border-bottom: 1px solid #c0c0c0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+    background: white;
+}
+
+.content {
+    margin-top: 81px;
+}
+
+.messages {
+    position: fixed;
+    z-index: 9999;
+    width: 50%;
+    left: 25%;
+    top: 50px;
+}

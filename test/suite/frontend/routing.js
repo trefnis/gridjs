@@ -46,7 +46,7 @@ function getStateNames(states) {
 }
 
 function routeConfig($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/elementsEditor');
 
     Object.keys(stateNames).forEach(function(stateName) {
         $stateProvider.state(stateName, states[stateName]);

@@ -1,0 +1,8 @@
+<div class="messages">
+    <uib-alert ng-repeat="msg in messenger.messages" 
+               type="{{msg.type}}"
+               dismiss-on-timeout="{{msg.timeout || messenger.defaultTimeout}}"
+               close="messenger.closeMsg($index)">
+        {{msg.text}}
+    </uib-alert>
+</div>

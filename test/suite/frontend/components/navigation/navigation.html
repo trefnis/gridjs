@@ -1,4 +1,4 @@
-<uib-tabset type="pills">
+<uib-tabset type="{{navigation.navTabs.type}}">
     <uib-tab ng-repeat="tab in navigation.navTabs" 
              heading="{{tab.heading}}"
              active="tab.isActive"

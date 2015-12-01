@@ -1,0 +1,22 @@
+<div>
+<form ng-submit="dialog.submit()">
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Select data set</label>
+            <select class="form-control"
+                    ng-model="dialog.selectedName"
+                    ng-options="name for name in dialog.setNames"
+                    size="10"
+                    required>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" 
+                type="submit">Ok</button>
+        <a class="btn btn-default" 
+                ng-click="dialog.modal.dismiss('cancel')" 
+                type="button">Cancel</a>
+    </div>
+</form>
+</div>
