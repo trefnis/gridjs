@@ -2,7 +2,7 @@
 'use strict';
 
 angular
-    .module('gridjs-test.dataset', [])
+    .module('gridjs-test.dataset')
     .factory('datasetRepository', ['apiUrl', '$http', DatasetRepository]);
 
 function DatasetRepository(apiUrl, $http) {

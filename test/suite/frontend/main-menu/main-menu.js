@@ -5,7 +5,7 @@ angular
     .module('gridjs-test.main-menu', [])
     .controller('MainMenuController', [
         'stateNames',
-        'datasetRepository',
+        'datasetManager',
         '$uibModal',
         'dialog',
         'loadSetDialog',
@@ -22,10 +22,10 @@ function mainMenuDirective() {
     };
 }
 
-function MainMenuController(stateNames, datasetRepository, $uibModal, dialog,
- loadSetDialog, messenger) {
-    //TODO get last used one from cookies/local storage etc
-    this.currentSet = createNewSet();
+function MainMenuController(stateNames, datasetManager, $uibModal, dialog, 
+    loadSetDialog, messenger) {
+    
+    this.currentSet = datasetManager.currentSet;
 
     this.navTabs = [
         {
@@ -54,14 +54,16 @@ function MainMenuController(stateNames, datasetRepository, $uibModal, dialog,
         var self = this;
 
         if (this.currentSet.isSaved) {
-            this.currentSet = createNewSet();
+            datasetManager.initializeNewSet();
+            this.currentSet = datasetManager.currentSet;
             return;
         }
 
         modal("Do you want to discard unsaved changes?")
             .then(function(result) {
                 if (result) {
-                    self.currentSet = createNewSet();
+                    datasetManager.initializeNewSet();
+                    self.currentSet = datasetManager.currentSet;
                 }
             });
     };
@@ -69,18 +71,23 @@ function MainMenuController(stateNames, datasetRepository, $uibModal, dialog,
 
     this.saveCurrentSet = function() {
         var self = this;
-        var setName = this.currentSet.name;
-        var dataSet = this.currentSet.dataSet;
+        var shouldSave = false;
 
-        datasetRepository.list()
+        if (!this.currentSet.name) {
+            messenger.error('set must have a name');
+            return;
+        }
+
+        datasetManager.list()
             .then(function(existingSets) {
-                return _.includes(existingSets, setName + '.json')
+                return _.includes(existingSets, self.currentSet.name)
                     ? modal("Do you want to overwrite existing set?")
                     : true;
             })
-            .then(function(shouldSave) {
+            .then(function(save) {
+                shouldSave = save;
                 return shouldSave 
-                    ? datasetRepository.save(setName, dataSet)
+                    ? datasetManager.save(self.currentSet)
                     : false;
             })
             .then(function(response) {
@@ -88,7 +95,7 @@ function MainMenuController(stateNames, datasetRepository, $uibModal, dialog,
                 self.currentSet.isSaved = isSaved;
                 if (isSaved) {
                     messenger.info('saved current set');
-                } else {
+                } else if (shouldSave) {
                     messenger.error('an error occured when saving');
                 }
             });
@@ -98,11 +105,11 @@ function MainMenuController(stateNames, datasetRepository, $uibModal, dialog,
         var self = this;
         var name;
 
-        datasetRepository.list()
+        datasetManager.list()
             .then(loadSetDialog)
             .then(function(selectedName) {
                 name = selectedName;
-                return datasetRepository.load(selectedName);
+                return datasetManager.load(selectedName);
             })
             .then(function(dataSet) {
                 self.currentSet.isSaved = true;
@@ -110,7 +117,9 @@ function MainMenuController(stateNames, datasetRepository, $uibModal, dialog,
                 self.currentSet.dataSet = dataSet;
             })
             .catch(function(reason) {
-                messenger.error('unable to load data set');
+                if (reason !== 'cancel' && reason !== 'backdrop click') {
+                    messenger.error('unable to load data set');
+                }
             });
     }
 }
@@ -119,15 +128,6 @@ function modalDialog($uibModal, dialog) {
     return function(text) {
         return $uibModal.open(dialog(text)).result;
     }
-}
-
-function createNewSet() {
-    return {
-        name: 'test',
-        dataSet: {
-            whatever: 'it is'
-        }
-    };
 }
 
 }());
