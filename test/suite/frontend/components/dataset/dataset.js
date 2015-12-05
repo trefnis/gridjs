@@ -1,8 +1,17 @@
 (function() {
 'use strict';
 
+var units = { 
+    px: 'px', 
+    percent: '%',
+    toArray: function() {
+        return [this.px, this.percent];
+    }
+};
+
 angular
     .module('gridjs-test.dataset', [])
+    .constant('availableUnits', units)
     .factory('Dataset', [function () {
         return Dataset;
     }]);
@@ -13,11 +22,11 @@ function Dataset(dataset) {
     this.name = defaultSet.name;
     this.columnWidth = defaultSet.columnWidth || 200;
     this.rowHeight = defaultSet.rowHeight || 200;
-    this.units = defaultSet.units || 'px';
+    this.units = defaultSet.units || { width: units.px, height: units.px };
     this.elements = [];
 }
 
-Dataset.prototype.elementSortableProperties = ['width', 'height', 'index'];
+Dataset.prototype.elementSortableProperties = ['index', 'width', 'height'];
 
 Dataset.prototype.createDefaultElement = function() {
     return {
@@ -25,12 +34,6 @@ Dataset.prototype.createDefaultElement = function() {
         height: this.rowHeight,
         index: this.elements.length
     };
-};
-
-Dataset.prototype.createDefault = function() {
-    return new Dataset({
-        name: 'dataSet1'
-    });
 };
 
 Dataset.prototype.sortElements = function(sortBy, order) {

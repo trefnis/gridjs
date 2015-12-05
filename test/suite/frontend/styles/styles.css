@@ -19,3 +19,34 @@
     left: 25%;
     top: 50px;
 }
+
+.elements-editor__menu-container {
+    position: fixed;
+    top: 81px;
+    bottom: 0;
+    right: 0;
+}
+
+.elements-editor__menu {
+    overflow: auto;
+    height: 100%; 
+}
+
+.input-single {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.panel-heading {
+    position: relative;
+}
+
+.panel-title--vertical-centered {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.panel-title__right-corner {
+    float: right;
+}

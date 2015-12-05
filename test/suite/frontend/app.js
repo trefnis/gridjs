@@ -8,18 +8,20 @@ angular
         'gridjs-test.config',
         'gridjs-test.routing',
 
-        'gridjs-test.dataset',
-        'gridjs-test.dialog',
-        'gridjs-test.messages',
-        'gridjs-test.navigation',
-
         'gridjs-test.main-menu',
         'gridjs-test.elements-editor',
         'gridjs-test.layout',
         'gridjs-test.layout-editor',
         'gridjs-test.comparison',
     ])
-    .run(['$state', function($state) {
+    .run(['$rootScope', '$state', function($rootScope, $state) {
+        $rootScope.val = 0;
+        $rootScope.increment = function(step) {
+            $rootScope.val = $rootScope.val + step;
+        }
+        $rootScope.decrement = function(step) {
+            $rootScope.val = $rootScope.val - step;
+        };
         $state.go('elementsEditor');
     }]);
 

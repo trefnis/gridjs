@@ -2,7 +2,11 @@
 'use strict';
 
 angular
-    .module('gridjs-test.main-menu', [])
+    .module('gridjs-test.main-menu', [
+        'gridjs-test.dialog',
+        'gridjs-test.messages',
+        'gridjs-test.navigation',
+    ])
     .controller('MainMenuController', [
         'stateNames',
         'datasetManager',
