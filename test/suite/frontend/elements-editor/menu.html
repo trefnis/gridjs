@@ -5,15 +5,30 @@
     <div class="panel-body">
         <form class="form-horizontal">
             <elements-editor-labelled-input 
+                label="Width" 
+                classes="input-group">
+                <input class="form-control"
+                   type="number"
+                   ng-disabled="vm.dataset.units.width === vm.units.percent"
+                   ng-model="vm.gridContainerWidth"
+                   ng-change="vm.calculateContainerRatio()"
+                   value="{{vm.dataset.units.width === vm.units.percent ? 100: 200}}"
+                   step="{{vm.getStep(vm.dataset.units.width)}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.width}}
+                </span>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
                 label="Column width" 
                 classes="input-group">
                 <input class="form-control"
                    type="number" 
-                   ng-model="elementsEditor.dataset.columnWidth" 
-                   step="{{elementsEditor.getStep(elementsEditor.dataset.units.width)}}"
+                   ng-model="vm.dataset.columnWidth" 
+                   step="{{vm.getStep(vm.dataset.units.width)}}"
                    min="0" />
                 <span class="input-group-addon">
-                    {{elementsEditor.dataset.units.width}}
+                    {{vm.dataset.units.width}}
                 </span>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
@@ -21,33 +36,33 @@
                 classes="input-group">
                 <input class="form-control"
                    type="number" 
-                   ng-model="elementsEditor.dataset.rowHeight" 
-                   step="{{elementsEditor.getStep(elementsEditor.dataset.units.height)}}"
+                   ng-model="vm.dataset.rowHeight" 
+                   step="{{vm.getStep(vm.dataset.units.height)}}"
                    min="0" />
                 <span class="input-group-addon">
-                    {{elementsEditor.dataset.units.height}}
+                    {{vm.dataset.units.height}}
                 </span>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
                 label="Width units" 
                 classes="input-single">
                 <select class="form-control"
-                   ng-model="elementsEditor.dataset.units.width"
-                   ng-options="unit for unit in elementsEditor.availableUnits"
-                   ng-change="elementsEditor.recalculateSizes ? recalculateWidths() : angular.noop"></select>
+                   ng-model="vm.dataset.units.width"
+                   ng-options="unit for unit in vm.availableUnits"
+                   ng-change="vm.recalculateSizes ? recalculateWidths() : angular.noop"></select>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
                 label="Height units" 
                 classes="input-single">
                 <select class="form-control"
-                   ng-model="elementsEditor.dataset.units.height" 
-                   ng-options="unit for unit in elementsEditor.availableUnits">
+                   ng-model="vm.dataset.units.height" 
+                   ng-options="unit for unit in vm.availableUnits">
                </select>
             </elements-editor-labelled-input>
             <div class="col-lg-offset-3 col-lg-9 checkbox">
                 <label>
                     <input type="checkbox"
-                        ng-model="elementsEditor.recalculateSizes">
+                        ng-model="vm.recalculateSizes">
                    Recalculate sizes on unit change
                 </label>
             </div>
@@ -58,65 +73,17 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
         <h3 class="panel-title">
-            <span class="panel-title--vertical-centered">New element</span>
-            <span class="panel-title__right-corner">
-                <button type="button" 
-                        class="btn btn-default text-center">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-            </span>
-        </h3>
-    </div>
-    <div class="panel-body">
-        <form class="form-horizontal">
-            <elements-editor-labelled-input 
-                label="Width" 
-                classes="input-group">
-                <input class="form-control"
-                   type="number" 
-                   ng-model="elementsEditor.newElement.width" 
-                   step="{{elementsEditor.dataset.columnWidth}}"
-                   min="0" />
-                <span class="input-group-addon">
-                    {{elementsEditor.dataset.units.width}}
-                </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
-                label="Height" 
-                classes="input-group">
-                <input class="form-control"
-                   type="number" 
-                   ng-model="elementsEditor.newElement.height" 
-                   step="{{elementsEditor.dataset.rowHeight}}"
-                   min="0" />
-                <span class="input-group-addon">
-                    {{elementsEditor.dataset.units.height}}
-                </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
-                label="Index" 
-                classes="input-single">
-                <input class="form-control"
-                   type="number"
-                   readonly
-                   ng-model="elementsEditor.dataset.elements.length" />
-            </elements-editor-labelled-input>
-        </form>
-    </div>
-</div>
-
-<div class="panel panel-default">
-    <div class="panel-heading clearfix">
-        <h3 class="panel-title">
             <span class="panel-title--vertical-centered">Selected element</span>
             <span class="panel-title__right-corner">
                 <button type="button" 
-                    ng-disabled="{{!elementsEditor.selectedElement}}" 
+                    ng-disabled="!vm.selectedElement"
+                    ng-click="vm.removeElement(vm.selectedElement)" 
                     class="btn btn-default text-center">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
                 <button type="button"
-                    ng-disabled="{{!elementsEditor.selectedElement}}" 
+                    ng-disabled="!vm.selectedElement"
+                    ng-click="vm.cloneElement(vm.selectedElement)"
                     class="btn btn-default text-center">
                     <span class="glyphicon glyphicon-duplicate"></span>
                 </button>
@@ -130,12 +97,12 @@
                 classes="input-group">
                 <input class="form-control"
                    type="number"
-                   ng-disabled="{{!elementsEditor.selectedElement}}" 
-                   ng-model="elementsEditor.selectedElement.width" 
-                   step="{{elementsEditor.dataset.columnWidth}}"
+                   ng-disabled="!vm.selectedElement" 
+                   ng-model="vm.selectedElement.width" 
+                   step="{{vm.dataset.columnWidth}}"
                    min="0" />
                 <span class="input-group-addon">
-                    {{elementsEditor.dataset.units.width}}
+                    {{vm.dataset.units.width}}
                 </span>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
@@ -143,12 +110,12 @@
                 classes="input-group">
                 <input class="form-control"
                    type="number"
-                   ng-disabled="{{!elementsEditor.selectedElement}}" 
-                   ng-model="elementsEditor.selectedElement.height" 
-                   step="{{elementsEditor.dataset.rowHeight}}"
+                   ng-disabled="!vm.selectedElement"
+                   ng-model="vm.selectedElement.height" 
+                   step="{{vm.dataset.rowHeight}}"
                    min="0" />
                 <span class="input-group-addon">
-                    {{elementsEditor.dataset.units.height}}
+                    {{vm.dataset.units.height}}
                 </span>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
@@ -156,8 +123,62 @@
                 classes="input-single">
                 <input class="form-control"
                    type="number"
-                   ng-disabled="{{!elementsEditor.selectedElement}}" 
-                   ng-model="elementsEditor.selectedElement.index" />
+                   ng-disabled="!vm.selectedElement" 
+                   ng-model="vm.selectedElement.index"
+                   min="0"
+                   max="{{vm.dataset.elements.length - 1}}"/>
+            </elements-editor-labelled-input>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h3 class="panel-title">
+            <span class="panel-title--vertical-centered">New element</span>
+            <span class="panel-title__right-corner">
+                <button type="button" 
+                    class="btn btn-default text-center"
+                    ng-click="vm.addNewElement(vm.newElement)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </span>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <elements-editor-labelled-input 
+                label="Width" 
+                classes="input-group">
+                <input class="form-control"
+                   type="number" 
+                   ng-model="vm.newElement.width" 
+                   step="{{vm.dataset.columnWidth}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.width}}
+                </span>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
+                label="Height" 
+                classes="input-group">
+                <input class="form-control"
+                   type="number" 
+                   ng-model="vm.newElement.height" 
+                   step="{{vm.dataset.rowHeight}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.height}}
+                </span>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
+                label="Index" 
+                classes="input-single">
+                <input class="form-control"
+                   type="number"
+                   readonly
+                   value="{{vm.dataset.elements.length}}"
+                   ng-model="vm.newElement.index" />
             </elements-editor-labelled-input>
         </form>
     </div>
@@ -173,12 +194,13 @@
                 label="Sort" 
                 classes="btn-group input-single">
                 <button type="button" 
-                    ng-repeat="order in elementsEditor.availableSortOrders"
+                    ng-repeat="order in vm.availableSortOrders"
                     uib-btn-radio="'{{order}}'"
-                    ng-model="elementsEditor.sortOrder"
+                    ng-model="vm.sortOrder"
+                    ng-click="vm.sortElements(order)"
                     class="btn btn-default">
                     <span class="glyphicon" 
-                        ng-class="elementsEditor.sortGlyphicons[order]">
+                        ng-class="vm.sortGlyphicons[order]">
                     </span>
                 </button>
             </elements-editor-labelled-input>
@@ -186,19 +208,27 @@
                 label="Sort by" 
                 classes="input-single">
                 <select class="form-control"
-                    ng-model="elementsEditor.sortBy"
-                    ng-options="sort for sort in elementsEditor.dataset.elementSortableProperties">
+                    ng-model="vm.sortBy"
+                    ng-change="vm.sortElements(vm.sortOrder)"
+                    ng-options="sort for sort in vm.dataset.elementSortableProperties">
                 </select>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
                 label="Display" 
                 classes="input-single">
                 <select class="form-control"
-                    ng-model="elementsEditor.display"
-                    ng-options="display for display in elementsEditor.availableDisplays">
+                    ng-model="vm.display"
+                    ng-options="display for display in vm.availableDisplays">
                 </select>
             </elements-editor-labelled-input>
-            <!--show actual size? -->
+            <div class="col-lg-offset-3 col-lg-9 checkbox">
+                <label>
+                    <input type="checkbox"
+                        ng-change="vm.calculateContainerRatio()"
+                        ng-model="vm.shouldScaleDown">
+                   Scale down to fit visual container
+                </label>
+            </div>
         </form>
     </div>
 </div>

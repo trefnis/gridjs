@@ -13,8 +13,18 @@ angular
 function ElementsEditorController($scope, datasetManager, availableUnits) {
     this.dataset = datasetManager.currentSet;
 
+    this.gridContainerWidth = 800;
+    this.actualContainerWidth = null;
+    this.readActualContainerWidth = null;
+    this.shouldScaleDown = false;
+    this._scaleRatio = 1;
+
+    this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
+    this.recalculateSizes = true;
+
     this.availableDisplays = ['float', 'block'];
+    this.display = this.availableDisplays[0];
     
     this.sortBy = this.dataset.elementSortableProperties[0];
     this.availableSortOrders = ['asc', 'desc', 'reset'];
@@ -25,11 +35,17 @@ function ElementsEditorController($scope, datasetManager, availableUnits) {
         'reset': 'glyphicon-remove' 
     };
 
-    this.display = this.availableDisplays[0];
-    this.recalculateSizes = true;
-
     this.newElement = this.dataset.createDefaultElement();
     this.selectedElement = null;
+    this.selectedElementIndexWatch = angular.noop;
+
+    $scope.$watch(function() {
+        return this.dataset.units.width;
+    }.bind(this), function(newVal) {
+        if (newVal === this.units.percent) {
+            this.gridContainerWidth = 100;
+        }
+    }.bind(this));
 
     var stepsForUnits = {};
     stepsForUnits[availableUnits.px] = 200;
@@ -44,13 +60,85 @@ function ElementsEditorController($scope, datasetManager, availableUnits) {
     };
 
     this.addNewElement = function(element) {
-        this.currentSet.elements.push(element);
+        this.dataset.elements.push(element);
+        this.newElement = this.dataset.createDefaultElement();
     }.bind(this);
 
     this.removeElement = function(element) {
-        _.remove(this.currentSet.elements, element);
+        this.selectedElementIndexWatch();
+        this.selectedElement = null;
+
+        _.remove(this.dataset.elements, element);
+        this.dataset.updateElementsIndexes();
+    }.bind(this);
+
+    this.cloneElement = function(element) {
+        var newElement = angular.copy(element);
+        newElement.index = this.dataset.elements.length;
+        this.dataset.elements.push(newElement);
     }.bind(this);
     
+    this.selectElement = function(element, $event) {
+        $event.stopPropagation();
+        this.selectedElementIndexWatch(); // Clear previous watch.
+
+        this.selectedElement = element;
+
+        // Adjust other indexes on change.
+        if (element) {
+            this.selectedElementIndexWatch = $scope.$watch(function() {
+                return this.selectedElement.index;
+            }.bind(this), function(newIndex, oldIndex) {
+                var isIncrementing = newIndex > oldIndex;
+                var insertAt = isIncrementing ? newIndex + 1 : newIndex;
+                var deleteAt = isIncrementing ? oldIndex : oldIndex + 1;
+
+                var elements = this.dataset.elements;
+                elements.splice(insertAt, 0, this.selectedElement);
+                elements.splice(deleteAt, 1);
+                this.dataset.updateElementsIndexes();
+            }.bind(this));
+        }
+    }.bind(this);
+
+    this.sortElements = function(order) {
+        if (order === 'reset') {
+            this.sortBy = this.dataset.elementSortableProperties[0];
+            this.sortOrder = order = 'asc';
+        }
+
+        this.dataset.sortElements(this.sortBy, order);
+    }.bind(this);
+
+    this.getElementCssSize = function(element) {
+        var shouldScaleDown = this.shouldScaleDown;
+        var width = shouldScaleDown
+            ? Math.floor(element.width * this._scaleRatio)
+            : element.width;
+        var height = shouldScaleDown
+            ? Math.floor(element.height * this._scaleRatio)
+            : element.height;
+
+        return {
+            width: width + this.dataset.units.width,
+            height: height + this.dataset.units.height
+        };
+    }.bind(this);
+
+    this.calculateContainerRatio = function() {
+        var shouldRescale = this.shouldScaleDown
+            && this.actualContainerWidth < this.gridContainerWidth;
+
+        this._scaleRatio = shouldRescale
+            ? this.actualContainerWidth / this.gridContainerWidth
+            : 1;
+    }.bind(this);
+
+    this.getContainerCssSize = function() {
+        return this._scaleRatio === 1
+            ? { width: this.gridContainerWidth + this.dataset.units.width }
+            : { width: 100 + this.units.percent };
+    }.bind(this);
 }
 
 }());

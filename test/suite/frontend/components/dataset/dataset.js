@@ -37,11 +37,17 @@ Dataset.prototype.createDefaultElement = function() {
 };
 
 Dataset.prototype.sortElements = function(sortBy, order) {
-    if (!_.any(this.elementSortableProperties, sortBy)) {
+    if (this.elementSortableProperties.indexOf(sortBy) === -1) {
         throw new Error('Incorrect "sortBy" argument: ' + sortBy + '. It has to be one of elementSortableProperties: ' + this.elementSortableProperties.join(', '));
     }
 
     this.elements = _.sortByOrder(this.elements, sortBy, order);
 };
+
+Dataset.prototype.updateElementsIndexes = function() {
+    this.elements.forEach(function(element, index) {
+        element.index = index;
+    });
+}
 
 }());

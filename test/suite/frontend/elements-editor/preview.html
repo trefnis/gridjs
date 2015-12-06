@@ -1,5 +1,23 @@
 <div class="panel panel-default">
-  <div class="panel-body">
-    Basic panel example
-  </div>
+    <div class="panel-body"
+        ng-click="vm.selectElement(null, $event)">
+        <div ng-if="!vm.dataset.elements.length">
+            <p>There are no elements yet.</p>
+        </div>
+
+        <ul class="element-list clearfix"
+            read-width-to="vm.actualContainerWidth"
+            save-width-reader-to="vm.readActualContainerWidth"
+            read-width-callback="vm.calculateContainerRatio()"
+            ng-style="vm.getContainerCssSize()">
+            <li class="element"
+                ng-if="vm.dataset.elements.length"
+                ng-repeat="element in vm.dataset.elements track by element.index"
+                ng-class="{'element--floating': vm.display === 'float', 'element--selected': element.index === vm.selectedElement.index }"
+                ng-click="vm.selectElement(element, $event)"
+                ng-style="vm.getElementCssSize(element)">
+                <span class="element__index">element {{element.index}}</span>
+            </li>
+        </ul>
+    </div>
 </div>

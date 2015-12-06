@@ -20,7 +20,7 @@ function initStates() {
         'elementsEditor': {
             url: '/elements-editor',
             templateUrl: 'elements-editor/elements-editor.html',
-            controller: 'ElementsEditorController as elementsEditor',
+            controller: 'ElementsEditorController as vm',
         },
         'layout': {
             url: '/layout',
