@@ -5,7 +5,7 @@
     <div class="panel-body">
         <form class="form-horizontal">
             <elements-editor-labelled-input 
-                label="Width" 
+                label="Width"
                 classes="input-group">
                 <input class="form-control"
                    type="number"
@@ -19,12 +19,12 @@
                     {{vm.dataset.units.width}}
                 </span>
             </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            <elements-editor-labelled-input
                 label="Column width" 
                 classes="input-group">
                 <input class="form-control"
                    type="number" 
-                   ng-model="vm.dataset.columnWidth" 
+                   ng-model="vm.dataset.columnWidth"
                    step="{{vm.getStep(vm.dataset.units.width)}}"
                    min="0" />
                 <span class="input-group-addon">
@@ -221,6 +221,16 @@
                     ng-options="display for display in vm.availableDisplays">
                 </select>
             </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
+                label="Zoom"
+                classes="input-single">
+                <input class="form-control"
+                   type="number"
+                   ng-model="vm.zoom"
+                   ng-readonly="vm.shouldScaleDown"
+                   step="0.1"
+                   min="0">
+            </elements-editor-labelled-input> 
             <div class="col-lg-offset-3 col-lg-9 checkbox">
                 <label>
                     <input type="checkbox"

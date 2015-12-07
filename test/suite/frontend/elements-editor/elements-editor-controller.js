@@ -17,7 +17,7 @@ function ElementsEditorController($scope, datasetManager, availableUnits) {
     this.actualContainerWidth = null;
     this.readActualContainerWidth = null;
     this.shouldScaleDown = false;
-    this._scaleRatio = 1;
+    this.zoom = 1;
 
     this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
@@ -111,13 +111,8 @@ function ElementsEditorController($scope, datasetManager, availableUnits) {
     }.bind(this);
 
     this.getElementCssSize = function(element) {
-        var shouldScaleDown = this.shouldScaleDown;
-        var width = shouldScaleDown
-            ? Math.floor(element.width * this._scaleRatio)
-            : element.width;
-        var height = shouldScaleDown
-            ? Math.floor(element.height * this._scaleRatio)
-            : element.height;
+        var width = Math.floor(element.width * this.zoom);
+        var height = Math.floor(element.height * this.zoom);
 
         return {
             width: width + this.dataset.units.width,
@@ -126,19 +121,25 @@ function ElementsEditorController($scope, datasetManager, availableUnits) {
     }.bind(this);
 
     this.calculateContainerRatio = function() {
-        var shouldRescale = this.shouldScaleDown
-            && this.actualContainerWidth < this.gridContainerWidth;
-
-        this._scaleRatio = shouldRescale
+        this.zoom = this._shouldScaleDown()
             ? this.actualContainerWidth / this.gridContainerWidth
             : 1;
     }.bind(this);
 
     this.getContainerCssSize = function() {
-        return this._scaleRatio === 1
-            ? { width: this.gridContainerWidth + this.dataset.units.width }
-            : { width: 100 + this.units.percent };
+        console.log(this._shouldScaleDown());
+        return this._shouldScaleDown()
+            ? { width: 100 + this.units.percent }
+            : { 
+                width: this.gridContainerWidth * this.zoom
+                 + this.dataset.units.width
+            };
     }.bind(this);
+
+    this._shouldScaleDown = function() {
+        return this.shouldScaleDown
+            && this.actualContainerWidth < this.gridContainerWidth;
+    }.bind(this)
 }
 
 }());
