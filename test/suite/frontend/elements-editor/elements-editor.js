@@ -20,7 +20,7 @@ angular
     })
     .directive('elementsEditorPreview', function() {
         return {
-            templateUrl: 'elements-editor/preview.html'
+            templateUrl: 'elements-editor/preview/preview.html'
         };
     });
 

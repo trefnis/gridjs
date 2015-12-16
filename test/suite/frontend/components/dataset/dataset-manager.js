@@ -4,12 +4,13 @@
 angular
     .module('gridjs-test.dataset')
     .factory('datasetManager', [
+        '$rootScope',
         'Dataset',
         'datasetRepository',
         createDatasetManager
     ]);
 
-function createDatasetManager(Dataset, datasetRepository) {
+function createDatasetManager($rootScope, Dataset, datasetRepository) {
     //TODO get last used one from cookies/local storage etc
     var currentSet = null;
 
@@ -25,7 +26,16 @@ function createDatasetManager(Dataset, datasetRepository) {
         },
         list: datasetRepository.list,
         load: function(name) {
-            return datasetRepository.load(name).then(createDatasetFromJson);
+            return datasetRepository
+                .load(name)
+                .then(function(datasetJson) {
+                    return new Dataset(datasetJson);
+                })
+                .then(function(dataset) {
+                    currentSet = dataset;
+                    $rootScope.$broadcast('newCurrentSet', currentSet);
+                    return currentSet;
+                });
         },
         save: function(dataset) {
             return datasetRepository.save(dataset.name, normalize(dataset));
@@ -34,12 +44,6 @@ function createDatasetManager(Dataset, datasetRepository) {
     };
 
     return datasetManager;
-}
-
-function createDatasetFromJson(datasetJson) {
-    // TODO: handle differences between actual data set and
-    // application state handling Dataset object
-    return datasetJson;
 }
 
 function normalize(dataset) {

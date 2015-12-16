@@ -8,6 +8,7 @@ angular
         'gridjs-test.navigation',
     ])
     .controller('MainMenuController', [
+        '$rootScope',
         'stateNames',
         'datasetManager',
         '$uibModal',
@@ -26,8 +27,12 @@ function mainMenuDirective() {
     };
 }
 
-function MainMenuController(stateNames, datasetManager, $uibModal, dialog, 
-    loadSetDialog, messenger) {
+function MainMenuController($rootScope, stateNames, datasetManager, 
+    $uibModal, dialog, loadSetDialog, messenger) {
+
+    $rootScope.$on('newCurrentSet', function(event, newCurrentSet) {
+        this.currentSet = newCurrentSet;
+    }.bind(this));
     
     this.currentSet = datasetManager.currentSet;
 
@@ -117,8 +122,6 @@ function MainMenuController(stateNames, datasetManager, $uibModal, dialog,
             })
             .then(function(dataSet) {
                 self.currentSet.isSaved = true;
-                self.currentSet.name = name;
-                self.currentSet.dataSet = dataSet;
             })
             .catch(function(reason) {
                 if (reason !== 'cancel' && reason !== 'backdrop click') {

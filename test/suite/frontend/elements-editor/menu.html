@@ -6,13 +6,12 @@
         <form class="form-horizontal">
             <elements-editor-labelled-input 
                 label="Width"
-                classes="input-group">
+                classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number"
                    ng-disabled="vm.dataset.units.width === vm.units.percent"
                    ng-model="vm.gridContainerWidth"
                    ng-change="vm.calculateContainerRatio()"
-                   value="{{vm.dataset.units.width === vm.units.percent ? 100: 200}}"
                    step="{{vm.getStep(vm.dataset.units.width)}}"
                    min="0" />
                 <span class="input-group-addon">
@@ -21,10 +20,11 @@
             </elements-editor-labelled-input>
             <elements-editor-labelled-input
                 label="Column width" 
-                classes="input-group">
+                classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number" 
                    ng-model="vm.dataset.columnWidth"
+                   ng-change="vm.resetNewElement()"
                    step="{{vm.getStep(vm.dataset.units.width)}}"
                    min="0" />
                 <span class="input-group-addon">
@@ -33,10 +33,11 @@
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
                 label="Row height" 
-                classes="input-group">
+                classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number" 
-                   ng-model="vm.dataset.rowHeight" 
+                   ng-model="vm.dataset.rowHeight"
+                   ng-change="vm.resetNewElement()"
                    step="{{vm.getStep(vm.dataset.units.height)}}"
                    min="0" />
                 <span class="input-group-addon">
@@ -94,11 +95,11 @@
         <form class="form-horizontal">
             <elements-editor-labelled-input 
                 label="Width" 
-                classes="input-group">
+                classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number"
                    ng-disabled="!vm.selectedElement" 
-                   ng-model="vm.selectedElement.width" 
+                   ng-model="vm.selectedElement.element.width" 
                    step="{{vm.dataset.columnWidth}}"
                    min="0" />
                 <span class="input-group-addon">
@@ -107,11 +108,11 @@
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
                 label="Height" 
-                classes="input-group">
+                classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number"
                    ng-disabled="!vm.selectedElement"
-                   ng-model="vm.selectedElement.height" 
+                   ng-model="vm.selectedElement.element.height" 
                    step="{{vm.dataset.rowHeight}}"
                    min="0" />
                 <span class="input-group-addon">
@@ -123,8 +124,9 @@
                 classes="input-single">
                 <input class="form-control"
                    type="number"
-                   ng-disabled="!vm.selectedElement" 
-                   ng-model="vm.selectedElement.index"
+                   ng-disabled="!vm.selectedElement"
+                   ng-model-options="{ getterSetter: true, debounce: 1000 }"
+                   ng-model="vm.selectedElementIndex"
                    min="0"
                    max="{{vm.dataset.elements.length - 1}}"/>
             </elements-editor-labelled-input>
@@ -149,7 +151,7 @@
         <form class="form-horizontal">
             <elements-editor-labelled-input 
                 label="Width" 
-                classes="input-group">
+                classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number" 
                    ng-model="vm.newElement.width" 
@@ -161,7 +163,7 @@
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
                 label="Height" 
-                classes="input-group">
+                classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number" 
                    ng-model="vm.newElement.height" 
@@ -177,8 +179,7 @@
                 <input class="form-control"
                    type="number"
                    readonly
-                   value="{{vm.dataset.elements.length}}"
-                   ng-model="vm.newElement.index" />
+                   value="{{vm.elements.length}}" />
             </elements-editor-labelled-input>
         </form>
     </div>
@@ -192,12 +193,12 @@
         <form class="form-horizontal">
             <elements-editor-labelled-input 
                 label="Sort" 
-                classes="btn-group input-single">
+                classes="btn-group btn-group-sm input-single">
                 <button type="button" 
                     ng-repeat="order in vm.availableSortOrders"
                     uib-btn-radio="'{{order}}'"
                     ng-model="vm.sortOrder"
-                    ng-click="vm.sortElements(order)"
+                    ng-model-options="{ getterSetter: true }"
                     class="btn btn-default">
                     <span class="glyphicon" 
                         ng-class="vm.sortGlyphicons[order]">
@@ -209,8 +210,8 @@
                 classes="input-single">
                 <select class="form-control"
                     ng-model="vm.sortBy"
-                    ng-change="vm.sortElements(vm.sortOrder)"
-                    ng-options="sort for sort in vm.dataset.elementSortableProperties">
+                    ng-options="sort for sort in vm.elementSortableProperties">
+                    <!-- ng-change="vm.sortElements(vm.sortOrder)" -->
                 </select>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
@@ -232,11 +233,18 @@
                    min="0">
             </elements-editor-labelled-input> 
             <div class="col-lg-offset-3 col-lg-9 checkbox">
-                <label>
+                <label class="control-label">
                     <input type="checkbox"
                         ng-change="vm.calculateContainerRatio()"
-                        ng-model="vm.shouldScaleDown">
+                        ng-model="vm.shouldScaleDown"></label>
                    Scale down to fit visual container
+                </label>
+            </div>
+            <div class="col-lg-offset-3 col-lg-9 checkbox">
+                <label class="control-label">
+                <input type="checkbox"
+                        ng-model="vm.reverse">
+                   asc/desc
                 </label>
             </div>
         </form>

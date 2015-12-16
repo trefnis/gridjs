@@ -26,29 +26,19 @@
 
 /* Elements editor */
 
-.elements-editor__tab {
+.elements-editor {
     position: fixed;
     top: 81px;
     bottom: 0;
 }
 
-.elements-editor__tab--preview {
-    left: 0;
-}
-
-.elements-editor__tab--menu {
-    right: 0;
-    overflow: auto;
+.elements-editor__tab {
+    height: 100%;
 }
 
 .elements-editor__tab-content {
     overflow: auto;
-    height: 100%; 
-}
-
-.elements-editor__menu {
-    overflow: auto;
-    height: 100%;
+    max-height: 100%; 
 }
 
 .input-single {
@@ -86,6 +76,7 @@
     box-sizing: border-box;
     position: relative;
     text-align: center;
+    cursor: pointer;
 }
 
 .element--floating {

@@ -23,31 +23,23 @@ function Dataset(dataset) {
     this.columnWidth = defaultSet.columnWidth || 200;
     this.rowHeight = defaultSet.rowHeight || 200;
     this.units = defaultSet.units || { width: units.px, height: units.px };
-    this.elements = [];
+    this.elements =  defaultSet.elements || [];
 }
 
-Dataset.prototype.elementSortableProperties = ['index', 'width', 'height'];
+Dataset.prototype.rearrangeElement = function(newIndex, oldIndex) {
+    var isIncrementing = newIndex > oldIndex;
+    var insertAt = isIncrementing ? newIndex + 1 : newIndex;
+    var deleteAt = isIncrementing ? oldIndex : oldIndex + 1;
+
+    this.elements.splice(insertAt, 0, this.elements[oldIndex]);
+    this.elements.splice(deleteAt, 1);
+};
 
 Dataset.prototype.createDefaultElement = function() {
     return {
         width: this.columnWidth,
         height: this.rowHeight,
-        index: this.elements.length
     };
 };
-
-Dataset.prototype.sortElements = function(sortBy, order) {
-    if (this.elementSortableProperties.indexOf(sortBy) === -1) {
-        throw new Error('Incorrect "sortBy" argument: ' + sortBy + '. It has to be one of elementSortableProperties: ' + this.elementSortableProperties.join(', '));
-    }
-
-    this.elements = _.sortByOrder(this.elements, sortBy, order);
-};
-
-Dataset.prototype.updateElementsIndexes = function() {
-    this.elements.forEach(function(element, index) {
-        element.index = index;
-    });
-}
 
 }());
