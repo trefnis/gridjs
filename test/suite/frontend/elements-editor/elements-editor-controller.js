@@ -18,7 +18,11 @@ function ElementsEditorController($scope, $rootScope, datasetManager,
 
     this.availableDisplays = ['float', 'block'];    
     this.availableSortOrders = ['asc', 'desc', 'reset'];
-    this.elementSortableProperties = ['index', 'width', 'height'];
+    this.elementSortableProperties = [
+        { label: 'index', prop: 'index' },
+        { label: 'width', prop: 'element.width' },
+        { label: 'height', prop: 'element.height' }
+    ];
     this.sortGlyphicons = {
         'asc': 'glyphicon-sort-by-attributes',
         'desc': 'glyphicon-sort-by-attributes-alt',
@@ -51,53 +55,7 @@ function ElementsEditorController($scope, $rootScope, datasetManager,
         console.log('not implemented yet');
     };
 
-    this.getElementCssSize = function(element) {
-        element = element.element;
-        var width = Math.floor(element.width * this.zoom);
-        var height = Math.floor(element.height * this.zoom);
-
-        return {
-            width: width + this.dataset.units.width,
-            height: height + this.dataset.units.height
-        };
-    }.bind(this);
-
-    this.calculateContainerRatio = function() {
-        this.zoom = this._shouldScaleDown()
-            ? this.actualContainerWidth / this.gridContainerWidth
-            : 1;
-    }.bind(this);
-
-    this.getContainerCssSize = function() {
-        console.log(this._shouldScaleDown());
-        return this._shouldScaleDown()
-            ? { width: 100 + this.units.percent }
-            : { 
-                width: this.gridContainerWidth * this.zoom
-                 + this.dataset.units.width
-            };
-    }.bind(this);
-
-    this._shouldScaleDown = function() {
-        return this.shouldScaleDown
-            && this.actualContainerWidth < this.gridContainerWidth;
-    }.bind(this);
-
-    // this.updateElementsIndexes = function() {
-    //     var elements = this.sortBy !== 'index' || this.sortOrder !== 'asc'
-    //         ? _.sortByOrder(this.dataset.elements, 'index', 'asc')
-    //         : this.dataset.elements;
-
-    //     elements.forEach(function(element, index) {
-    //         element.index = index;
-    //     });
-    // }.bind(this);
-
-    // this.updateIndexes = function(elements) {
-    //     elements.forEach(function(element, index) {
-    //         element.index = index;
-    //     });
-    // }.bind(this);
+    this.selectElement = this.selectElement.bind(this);
 }
 
 ElementsEditorController.prototype.init = function(dataset) {
@@ -114,9 +72,9 @@ ElementsEditorController.prototype.init = function(dataset) {
     // this.recalculateSizes = true;
 
     this.display = this.availableDisplays[0];    
-    this.sortBy = this.elementSortableProperties[0];
+    this.sortBy = this.elementSortableProperties[0].prop;
     this._sortOrder = null;
-    // this.sortOrder = this.availableSortOrders[0];
+    this.sortOrder(this.availableSortOrders[0]);
 
     this.selectedElement = null;
     this.newElement = this.dataset.createDefaultElement();
@@ -167,8 +125,7 @@ ElementsEditorController.prototype.addNewElement = function(element) {
 
 ElementsEditorController.prototype.removeElement = function(element) {
     this.selectedElement = null;
-
-    _.remove(this.dataset.elements, element.element);
+    this.dataset.elements.splice(element.index, 1);
     this.initElements();
 };
 

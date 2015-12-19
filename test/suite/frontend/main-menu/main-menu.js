@@ -77,7 +77,6 @@ function MainMenuController($rootScope, stateNames, datasetManager,
             });
     };
 
-
     this.saveCurrentSet = function() {
         var self = this;
         var shouldSave = false;

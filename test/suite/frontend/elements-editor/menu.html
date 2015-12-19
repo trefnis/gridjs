@@ -210,8 +210,7 @@
                 classes="input-single">
                 <select class="form-control"
                     ng-model="vm.sortBy"
-                    ng-options="sort for sort in vm.elementSortableProperties">
-                    <!-- ng-change="vm.sortElements(vm.sortOrder)" -->
+                    ng-options="sort.prop as sort.label for sort in vm.elementSortableProperties">
                 </select>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
@@ -238,13 +237,6 @@
                         ng-change="vm.calculateContainerRatio()"
                         ng-model="vm.shouldScaleDown"></label>
                    Scale down to fit visual container
-                </label>
-            </div>
-            <div class="col-lg-offset-3 col-lg-9 checkbox">
-                <label class="control-label">
-                <input type="checkbox"
-                        ng-model="vm.reverse">
-                   asc/desc
                 </label>
             </div>
         </form>

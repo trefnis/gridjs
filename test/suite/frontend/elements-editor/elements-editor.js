@@ -12,16 +12,6 @@ angular
             templateUrl: 'elements-editor/labelled-input.html',
             attributes: ['label', 'classes']
         });
-    }])
-    .directive('elementsEditorMenu', function() {
-        return {
-            templateUrl: 'elements-editor/menu.html'
-        };
-    })
-    .directive('elementsEditorPreview', function() {
-        return {
-            templateUrl: 'elements-editor/preview/preview.html'
-        };
-    });
+    }]);
 
 }());

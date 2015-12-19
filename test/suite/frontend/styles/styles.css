@@ -37,7 +37,8 @@
 }
 
 .elements-editor__tab-content {
-    overflow: auto;
+    /*overflow: auto;*/
+    overflow-y: scroll;
     max-height: 100%; 
 }
 
@@ -46,8 +47,8 @@
     padding-right: 0;
 }
 
-.elements-editor__tab--preview .panel {
-    overflow: auto;
+.elements-editor__tab-content--layout .panel {
+    margin-bottom: 0;
 }
 
 .panel-heading {

@@ -1,13 +1,24 @@
 <div class="row elements-editor">
     <div class="col-lg-5 elements-editor__tab">
-        <div elements-editor-preview class="elements-editor__tab-content"></div>
+        <div class="elements-editor__tab-content elements-editor__tab-content--layout"
+            elements-editor-preview
+            elements="vm.elements"
+            select-element="vm.selectElement"
+            selected-element-index="vm.getSelectedElementIndex()"
+            sort-by="vm.sortBy"
+            reverse="vm.reverse"
+            display="vm.display"
+            grid-container-width="vm.gridContainerWidth"
+            units="vm.dataset.units"
+        ></div>
     </div>
     <div class="col-lg-5 elements-editor__tab">
         <div ng-include="'elements-editor/arrange.html'" 
             class="elements-editor__tab-content"></div>
     </div>
     <div class="col-lg-2 elements-editor__tab">
-        <div elements-editor-menu class="elements-editor__tab-content"></div>
+        <div class="elements-editor__tab-content"
+            ng-include="'elements-editor/menu.html'"></div>
     </div>
 </div>
 

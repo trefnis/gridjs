@@ -23,6 +23,7 @@ function createDatasetManager($rootScope, Dataset, datasetRepository) {
         },
         initializeNewSet: function() {
             currentSet = new Dataset();
+            $rootScope.$broadcast('newCurrentSet', currentSet);
         },
         list: datasetRepository.list,
         load: function(name) {
