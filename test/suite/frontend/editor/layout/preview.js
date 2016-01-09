@@ -2,25 +2,25 @@
 'use strict';
 
 angular
-    .module('gridjs-test.elements-editor')
-    .directive('elementsEditorPreview', elementsEditorPreviewDirective)
-    .controller('ElementsEditorPreviewMenuController', [ElementsEditorPreviewMenuController])
-    .directive('elementsEditorPreviewMenu', elementsEditorPreviewMenuDirective)
-    .controller('ElementsEditorPreviewController', [ElementsEditorPreviewController]);
+    .module('gridjs-test.editor')
+    .directive('editorPreview', editorPreviewDirective)
+    .controller('editorPreviewMenuController', [editorPreviewMenuController])
+    .directive('editorPreviewMenu', editorPreviewMenuDirective)
+    .controller('editorPreviewController', [editorPreviewController]);
 
-function elementsEditorPreviewMenuDirective() {
+function editorPreviewMenuDirective() {
     return {
-        templateUrl: 'elements-editor/layout/editors-menu.html',
+        templateUrl: 'editor/layout/editors-menu.html',
         scope: {
             editor: '='
         },
-        controller: 'ElementsEditorPreviewMenuController',
+        controller: 'editorPreviewMenuController',
         bindToController: true,
         controllerAs: 'menu'
     };
 }
 
-function ElementsEditorPreviewMenuController() {
+function editorPreviewMenuController() {
     if (!this.editor) {
         this.editor = {};
     }
@@ -69,9 +69,9 @@ function ElementsEditorPreviewMenuController() {
     }.bind(this.editor);
 }
 
-function elementsEditorPreviewDirective() {
+function editorPreviewDirective() {
     return {
-        templateUrl: 'elements-editor/layout/preview.html',
+        templateUrl: 'editor/layout/preview.html',
         scope: {
             elements: '=',
             selectElement: '=',
@@ -79,22 +79,22 @@ function elementsEditorPreviewDirective() {
             units: '=',
             editor: '=',
         },
-        controller: 'ElementsEditorPreviewController',
+        controller: 'editorPreviewController',
         controllerAs: 'vm',
         bindToController: true,
     };
 }
 
-function ElementsEditorPreviewController() {}
+function editorPreviewController() {}
 
-ElementsEditorPreviewController.prototype.getElementClass = function(element) {
+editorPreviewController.prototype.getElementClass = function(element) {
     return {
         'element--floating': this.editor.display === 'float', 
         'element--selected': element.index === this.selectedElementIndex 
     };
 };
 
-ElementsEditorPreviewController.prototype.getElementCssSize = function(element) {
+editorPreviewController.prototype.getElementCssSize = function(element) {
     var width = Math.floor(element.width * this.editor.zoom);
     var height = Math.floor(element.height * this.editor.zoom);
 

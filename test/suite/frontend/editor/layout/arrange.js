@@ -2,7 +2,7 @@
 'use strict';
 
 angular
-    .module('gridjs-test.elements-editor')
+    .module('gridjs-test.editor')
     .directive('elementsEditorArrange', elementsEditorArrangeDirective)
     .controller('elementsEditorArrangeController', [
         '$scope',

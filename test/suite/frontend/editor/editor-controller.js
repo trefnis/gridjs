@@ -2,16 +2,16 @@
 'use strict';
 
 angular
-    .module('gridjs-test.elements-editor')
-    .controller('ElementsEditorController', [
+    .module('gridjs-test.editor')
+    .controller('EditorController', [
         '$scope',
         '$rootScope',
         'datasetManager', 
         'availableUnits',
-        ElementsEditorController
+        EditorController
     ]);
 
-function ElementsEditorController($scope, $rootScope, datasetManager,
+function EditorController($scope, $rootScope, datasetManager,
  availableUnits) {
     this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
@@ -47,7 +47,7 @@ function ElementsEditorController($scope, $rootScope, datasetManager,
     this.selectElement = this.selectElement.bind(this);
 }
 
-ElementsEditorController.prototype.init = function(datasetManager) {
+EditorController.prototype.init = function(datasetManager) {
     this.dataset = datasetManager.currentSet;
 
     this.selectedElement = null;
@@ -55,7 +55,7 @@ ElementsEditorController.prototype.init = function(datasetManager) {
     this.initElements();
 };
 
-ElementsEditorController.prototype.initElements = function() {
+EditorController.prototype.initElements = function() {
     this.elements = this.dataset.elements.map(function(el, index) {
         return {
             index: index,
@@ -64,12 +64,12 @@ ElementsEditorController.prototype.initElements = function() {
     });
 };
 
-ElementsEditorController.prototype.selectElement = function(element, $event) {
+EditorController.prototype.selectElement = function(element, $event) {
     $event.stopPropagation();
     this.selectedElement = element;
 };
 
-ElementsEditorController.prototype.selectedElementIndex = function(newIndex) {
+EditorController.prototype.selectedElementIndex = function(newIndex) {
     if (arguments.length) {
         this.setSelectedElementIndex(newIndex);
         this.selectedElement.index = newIndex;
@@ -78,11 +78,11 @@ ElementsEditorController.prototype.selectedElementIndex = function(newIndex) {
     }
 };
 
-ElementsEditorController.prototype.getSelectedElementIndex = function() {
+EditorController.prototype.getSelectedElementIndex = function() {
     return this.selectedElement ? this.selectedElement.index : null;
 };
 
-ElementsEditorController.prototype.setSelectedElementIndex = function(newIndex) {
+EditorController.prototype.setSelectedElementIndex = function(newIndex) {
     if (!this.selectElement || newIndex === undefined || newIndex === null) {
         return;
     }
@@ -91,19 +91,19 @@ ElementsEditorController.prototype.setSelectedElementIndex = function(newIndex) 
     this.initElements();
 };
 
-ElementsEditorController.prototype.addNewElement = function(element) {
+EditorController.prototype.addNewElement = function(element) {
     this.dataset.elements.push(element);
     this.initElements();
     this.newElement = this.dataset.createDefaultElement();
 };
 
-ElementsEditorController.prototype.removeElement = function(element) {
+EditorController.prototype.removeElement = function(element) {
     this.selectedElement = null;
     this.dataset.elements.splice(element.index, 1);
     this.initElements();
 };
 
-ElementsEditorController.prototype.cloneElement = function(element) {
+EditorController.prototype.cloneElement = function(element) {
     var newElement = angular.copy(element.element);
     this.dataset.elements.push(newElement);
     this.initElements();

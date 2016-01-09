@@ -9,10 +9,8 @@ angular
         'gridjs-test.routing',
 
         'gridjs-test.main-menu',
-        'gridjs-test.elements-editor',
-        'gridjs-test.layout',
-        'gridjs-test.layout-editor',
-        'gridjs-test.comparison',
+        'gridjs-test.editor',
+        // 'gridjs-test.comparer',
     ])
     .run(['$rootScope', '$state', function($rootScope, $state) {
         $rootScope.val = 0;
@@ -22,7 +20,7 @@ angular
         $rootScope.decrement = function(step) {
             $rootScope.val = $rootScope.val - step;
         };
-        $state.go('elementsEditor');
+        $state.go('editor');
     }]);
 
 }());

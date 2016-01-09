@@ -20,7 +20,7 @@
     </div>
     <div class="panel-body">
         <form class="form-horizontal">
-            <elements-editor-labelled-input 
+            <editor-labelled-input 
                 label="Width" 
                 classes="input-group input-group-sm">
                 <input class="form-control"
@@ -32,8 +32,8 @@
                 <span class="input-group-addon">
                     {{vm.dataset.units.width}}
                 </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            </editor-labelled-input>
+            <editor-labelled-input 
                 label="Height" 
                 classes="input-group input-group-sm">
                 <input class="form-control"
@@ -45,8 +45,8 @@
                 <span class="input-group-addon">
                     {{vm.dataset.units.height}}
                 </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            </editor-labelled-input>
+            <editor-labelled-input 
                 label="Index" 
                 classes="input-single">
                 <input class="form-control"
@@ -56,7 +56,7 @@
                    ng-model="vm.selectedElementIndex"
                    min="0"
                    max="{{vm.dataset.elements.length - 1}}"/>
-            </elements-editor-labelled-input>
+            </editor-labelled-input>
         </form>
     </div>
 </div>
@@ -76,7 +76,7 @@
     </div>
     <div class="panel-body">
         <form class="form-horizontal">
-            <elements-editor-labelled-input 
+            <editor-labelled-input 
                 label="Width" 
                 classes="input-group input-group-sm">
                 <input class="form-control"
@@ -87,8 +87,8 @@
                 <span class="input-group-addon">
                     {{vm.dataset.units.width}}
                 </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            </editor-labelled-input>
+            <editor-labelled-input 
                 label="Height" 
                 classes="input-group input-group-sm">
                 <input class="form-control"
@@ -99,20 +99,20 @@
                 <span class="input-group-addon">
                     {{vm.dataset.units.height}}
                 </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            </editor-labelled-input>
+            <editor-labelled-input 
                 label="Index" 
                 classes="input-single">
                 <input class="form-control"
                    type="number"
                    readonly
                    value="{{vm.elements.length}}" />
-            </elements-editor-labelled-input>
+            </editor-labelled-input>
         </form>
     </div>
 </div>
 
-<div elements-editor-preview-menu editor="vm.editor"></div>
+<div editor-preview-menu editor="vm.editor"></div>
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -120,7 +120,7 @@
     </div>
     <div class="panel-body">
         <form class="form-horizontal">
-            <elements-editor-labelled-input 
+            <editor-labelled-input 
                 label="Width"
                 classes="input-group input-group-sm">
                 <input class="form-control"
@@ -133,8 +133,8 @@
                 <span class="input-group-addon">
                     {{vm.dataset.units.width}}
                 </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input
+            </editor-labelled-input>
+            <editor-labelled-input
                 label="Column width" 
                 classes="input-group input-group-sm">
                 <input class="form-control"
@@ -146,8 +146,8 @@
                 <span class="input-group-addon">
                     {{vm.dataset.units.width}}
                 </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            </editor-labelled-input>
+            <editor-labelled-input 
                 label="Row height" 
                 classes="input-group input-group-sm">
                 <input class="form-control"
@@ -159,8 +159,8 @@
                 <span class="input-group-addon">
                     {{vm.dataset.units.height}}
                 </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            </editor-labelled-input>
+            <editor-labelled-input 
                 label="Zoom"
                 classes="input-single">
                 <input class="form-control"
@@ -169,7 +169,7 @@
                    ng-readonly="vm.shouldScaleDown"
                    step="0.1"
                    min="0">
-            </elements-editor-labelled-input> 
+            </editor-labelled-input> 
             <div class="col-lg-offset-3 col-lg-9 checkbox">
                 <label class="control-label">
                     <input type="checkbox"
@@ -188,22 +188,22 @@
     </div>
     <div class="panel-body">
         <form class="form-horizontal">
-            <elements-editor-labelled-input 
+            <editor-labelled-input 
                 label="Width units" 
                 classes="input-single">
                 <select class="form-control"
                    ng-model="vm.dataset.units.width"
                    ng-options="unit for unit in vm.availableUnits"
                    ng-change="vm.recalculateSizes ? recalculateWidths() : angular.noop"></select>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
+            </editor-labelled-input>
+            <editor-labelled-input 
                 label="Height units" 
                 classes="input-single">
                 <select class="form-control"
                    ng-model="vm.dataset.units.height" 
                    ng-options="unit for unit in vm.availableUnits">
                </select>
-            </elements-editor-labelled-input>
+            </editor-labelled-input>
             <div class="col-lg-offset-3 col-lg-9 checkbox">
                 <label>
                     <input type="checkbox"

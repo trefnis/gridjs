@@ -12,26 +12,16 @@ angular
 function initStates() {
     // All available states.
     return {
-        'comparison': {
-            url: '/comparison',
-            templateUrl: 'comparison/comparison.html',
-            controller: 'ComparisonController as comparison',
+        'comparer': {
+            url: '/compare',
+            templateUrl: 'comparer/comparer.html',
+            controller: 'ComparerController as comparer',
         },
-        'elementsEditor': {
-            url: '/elements-editor',
-            templateUrl: 'elements-editor/elements-editor.html',
-            controller: 'ElementsEditorController as vm',
+        'editor': {
+            url: '/editor',
+            templateUrl: 'editor/editor.html',
+            controller: 'EditorController as vm',
         },
-        'layout': {
-            url: '/layout',
-            templateUrl: 'layout/layout.html',
-            controller: 'LayoutController as layout',
-        },
-        'layoutEditor': {
-            url: '/layout-editor',
-            templateUrl: 'layout-editor/layout-editor.html',
-            controller: 'LayoutEditorController as layoutEditor',
-        }
     };
 }
 
@@ -46,7 +36,7 @@ function getStateNames(states) {
 }
 
 function routeConfig($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/elementsEditor');
+    $urlRouterProvider.otherwise('/editor');
 
     Object.keys(stateNames).forEach(function(stateName) {
         $stateProvider.state(stateName, states[stateName]);

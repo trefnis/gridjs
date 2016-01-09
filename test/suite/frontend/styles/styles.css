@@ -24,19 +24,19 @@
     margin: 0;
 }
 
-/* Elements editor */
+/* Editor */
 
-.elements-editor {
+.editor {
     position: fixed;
     top: 81px;
     bottom: 0;
 }
 
-.elements-editor__tab {
+.editor__tab {
     height: 100%;
 }
 
-.elements-editor__tab-content {
+.editor__tab-content {
     /*overflow: auto;*/
     overflow-y: scroll;
     max-height: 100%; 
@@ -47,7 +47,7 @@
     padding-right: 0;
 }
 
-.elements-editor__tab-content--layout .panel {
+.editor__tab-content--layout .panel {
     margin-bottom: 0;
 }
 

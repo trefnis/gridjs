@@ -1,0 +1,24 @@
+<div class="row elements-editor">
+    <h1>{{vm.scopePass.one}}</h1>
+    <div class="col-lg-5 elements-editor__tab">
+        <div class="editor__tab-content editor__tab-content--layout"
+
+            editor-preview
+            elements="vm.elements"
+            select-element="vm.selectElement"
+            selected-element-index="vm.getSelectedElementIndex()"
+            units="vm.dataset.units"
+            
+            editor="vm.editor"
+            
+        ></div>
+    </div>
+    <div class="col-lg-5 editor__tab">
+        <div ng-include="'editor/layout/arrange.html'" 
+            class="editor__tab-content"></div>
+    </div>
+    <div class="col-lg-2 editor__tab">
+        <div class="editor__tab-content"
+            ng-include="'editor/menu.html'"></div>
+    </div>
+</div>

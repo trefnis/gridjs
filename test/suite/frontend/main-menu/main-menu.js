@@ -38,19 +38,11 @@ function MainMenuController($rootScope, stateNames, datasetManager,
 
     this.navTabs = [
         {
-            state: stateNames.elementsEditor,
+            state: stateNames.editor,
             heading: 'Edit elements',
         },
         {
-            state: stateNames.layout,
-            heading: 'Algorithm layout',
-        },
-        {
-            state: stateNames.layoutEditor,
-            heading: 'Manual layout',
-        },
-        {
-            state: stateNames.comparison,
+            state: stateNames.comparer,
             heading: 'Compare auto & manual',
         },
     ];
