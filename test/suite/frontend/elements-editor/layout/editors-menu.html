@@ -1,0 +1,49 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Editor</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <elements-editor-labelled-input 
+                label="Sort" 
+                classes="btn-group btn-group-sm input-single">
+                <button type="button" 
+                    ng-repeat="order in menu.editor.availableSortOrders"
+                    uib-btn-radio="'{{order}}'"
+                    ng-model="menu.editor.sortOrder"
+                    ng-model-options="{ getterSetter: true }"
+                    class="btn btn-default">
+                    <span class="glyphicon" 
+                        ng-class="menu.editor.sortGlyphicons[order]">
+                    </span>
+                </button>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
+                label="Sort by" 
+                classes="input-single">
+                <select class="form-control"
+                    ng-model="menu.editor.sortBy"
+                    ng-options="sort.prop as sort.label for sort in menu.editor.elementSortableProperties">
+                </select>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
+                label="Display" 
+                classes="input-single">
+                <select class="form-control"
+                    ng-model="menu.editor.display"
+                    ng-options="display for display in menu.editor.availableDisplays">
+                </select>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
+                label="Zoom"
+                classes="input-single">
+                <input class="form-control"
+                   type="number"
+                   ng-model="menu.editor.zoom"
+                   ng-readonly="menu.editor.shouldScaleDown"
+                   step="0.1"
+                   min="0">
+            </elements-editor-labelled-input> 
+        </form>
+    </div>
+</div>

@@ -1,77 +1,4 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Grid</h3>
-    </div>
-    <div class="panel-body">
-        <form class="form-horizontal">
-            <elements-editor-labelled-input 
-                label="Width"
-                classes="input-group input-group-sm">
-                <input class="form-control"
-                   type="number"
-                   ng-disabled="vm.dataset.units.width === vm.units.percent"
-                   ng-model="vm.gridContainerWidth"
-                   ng-change="vm.calculateContainerRatio()"
-                   step="{{vm.getStep(vm.dataset.units.width)}}"
-                   min="0" />
-                <span class="input-group-addon">
-                    {{vm.dataset.units.width}}
-                </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input
-                label="Column width" 
-                classes="input-group input-group-sm">
-                <input class="form-control"
-                   type="number" 
-                   ng-model="vm.dataset.columnWidth"
-                   ng-change="vm.resetNewElement()"
-                   step="{{vm.getStep(vm.dataset.units.width)}}"
-                   min="0" />
-                <span class="input-group-addon">
-                    {{vm.dataset.units.width}}
-                </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
-                label="Row height" 
-                classes="input-group input-group-sm">
-                <input class="form-control"
-                   type="number" 
-                   ng-model="vm.dataset.rowHeight"
-                   ng-change="vm.resetNewElement()"
-                   step="{{vm.getStep(vm.dataset.units.height)}}"
-                   min="0" />
-                <span class="input-group-addon">
-                    {{vm.dataset.units.height}}
-                </span>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
-                label="Width units" 
-                classes="input-single">
-                <select class="form-control"
-                   ng-model="vm.dataset.units.width"
-                   ng-options="unit for unit in vm.availableUnits"
-                   ng-change="vm.recalculateSizes ? recalculateWidths() : angular.noop"></select>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
-                label="Height units" 
-                classes="input-single">
-                <select class="form-control"
-                   ng-model="vm.dataset.units.height" 
-                   ng-options="unit for unit in vm.availableUnits">
-               </select>
-            </elements-editor-labelled-input>
-            <div class="col-lg-offset-3 col-lg-9 checkbox">
-                <label>
-                    <input type="checkbox"
-                        ng-model="vm.recalculateSizes">
-                   Recalculate sizes on unit change
-                </label>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="panel panel-default">
     <div class="panel-heading clearfix">
         <h3 class="panel-title">
             <span class="panel-title--vertical-centered">Selected element</span>
@@ -185,41 +112,53 @@
     </div>
 </div>
 
+<div elements-editor-preview-menu editor="vm.editor"></div>
+
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Appearance</h3>
+        <h3 class="panel-title">Arrange</h3>
     </div>
     <div class="panel-body">
         <form class="form-horizontal">
             <elements-editor-labelled-input 
-                label="Sort" 
-                classes="btn-group btn-group-sm input-single">
-                <button type="button" 
-                    ng-repeat="order in vm.availableSortOrders"
-                    uib-btn-radio="'{{order}}'"
-                    ng-model="vm.sortOrder"
-                    ng-model-options="{ getterSetter: true }"
-                    class="btn btn-default">
-                    <span class="glyphicon" 
-                        ng-class="vm.sortGlyphicons[order]">
-                    </span>
-                </button>
+                label="Width"
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number"
+                   ng-disabled="vm.dataset.units.width === vm.units.percent"
+                   ng-model="vm.gridContainerWidth"
+                   ng-change="vm.calculateContainerRatio()"
+                   step="{{vm.getStep(vm.dataset.units.width)}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.width}}
+                </span>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input
+                label="Column width" 
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number" 
+                   ng-model="vm.dataset.columnWidth"
+                   ng-change="vm.resetNewElement()"
+                   step="{{vm.getStep(vm.dataset.units.width)}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.width}}
+                </span>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
-                label="Sort by" 
-                classes="input-single">
-                <select class="form-control"
-                    ng-model="vm.sortBy"
-                    ng-options="sort.prop as sort.label for sort in vm.elementSortableProperties">
-                </select>
-            </elements-editor-labelled-input>
-            <elements-editor-labelled-input 
-                label="Display" 
-                classes="input-single">
-                <select class="form-control"
-                    ng-model="vm.display"
-                    ng-options="display for display in vm.availableDisplays">
-                </select>
+                label="Row height" 
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number" 
+                   ng-model="vm.dataset.rowHeight"
+                   ng-change="vm.resetNewElement()"
+                   step="{{vm.getStep(vm.dataset.units.height)}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.height}}
+                </span>
             </elements-editor-labelled-input>
             <elements-editor-labelled-input 
                 label="Zoom"
@@ -237,6 +176,39 @@
                         ng-change="vm.calculateContainerRatio()"
                         ng-model="vm.shouldScaleDown"></label>
                    Scale down to fit visual container
+                </label>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Units</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <elements-editor-labelled-input 
+                label="Width units" 
+                classes="input-single">
+                <select class="form-control"
+                   ng-model="vm.dataset.units.width"
+                   ng-options="unit for unit in vm.availableUnits"
+                   ng-change="vm.recalculateSizes ? recalculateWidths() : angular.noop"></select>
+            </elements-editor-labelled-input>
+            <elements-editor-labelled-input 
+                label="Height units" 
+                classes="input-single">
+                <select class="form-control"
+                   ng-model="vm.dataset.units.height" 
+                   ng-options="unit for unit in vm.availableUnits">
+               </select>
+            </elements-editor-labelled-input>
+            <div class="col-lg-offset-3 col-lg-9 checkbox">
+                <label>
+                    <input type="checkbox"
+                        ng-model="vm.recalculateSizes">
+                   Recalculate sizes on unit change
                 </label>
             </div>
         </form>

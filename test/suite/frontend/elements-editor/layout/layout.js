@@ -13,6 +13,7 @@ angular
 function ElementsLayout($window, args, scope) {
     this.units = args.units;
     this.shouldScaleDown = args.shouldScaleDown || false;
+    this.getElementClass = args.getElementClass;
     
     this.getActualWidth = args.getActualWidth;
     this.getDesiredWidth = args.getDesiredWidth;
@@ -38,6 +39,11 @@ ElementsLayout.prototype.getElementCssSize = function(element) {
         width: width + this.units.width,
         height: height + this.units.height
     };
+};
+
+ElementsLayout.prototype.setZoom = function(zoom) {
+    this.shouldScaleDown = false;
+    this.zoom = zoom;
 };
 
 ElementsLayout.prototype.calculateZoom = function() {

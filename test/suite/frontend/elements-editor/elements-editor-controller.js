@@ -16,23 +16,12 @@ function ElementsEditorController($scope, $rootScope, datasetManager,
     this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
 
-    this.availableDisplays = ['float', 'block'];    
-    this.availableSortOrders = ['asc', 'desc', 'reset'];
-    this.elementSortableProperties = [
-        { label: 'index', prop: 'index' },
-        { label: 'width', prop: 'element.width' },
-        { label: 'height', prop: 'element.height' }
-    ];
-    this.sortGlyphicons = {
-        'asc': 'glyphicon-sort-by-attributes',
-        'desc': 'glyphicon-sort-by-attributes-alt',
-        'reset': 'glyphicon-remove' 
-    };
-
-    this.init(datasetManager.currentSet);
-
+    // Let the editor directive fill all props.
+    this.editor = {};
+    this.init(datasetManager);
+    
     $rootScope.$on('newCurrentSet', function(event, newCurrentSet) {
-        this.init(newCurrentSet);
+        this.init(datasetManager);
     }.bind(this));
 
     // $scope.$watch(function() {
@@ -58,23 +47,8 @@ function ElementsEditorController($scope, $rootScope, datasetManager,
     this.selectElement = this.selectElement.bind(this);
 }
 
-ElementsEditorController.prototype.init = function(dataset) {
-    this.dataset = dataset;
-
-    this.reverse = false;
-
-    this.gridContainerWidth = 700;
-    this.actualContainerWidth = null;
-    this.readActualContainerWidth = null;
-    this.shouldScaleDown = false;
-    this.zoom = 1;
-
-    // this.recalculateSizes = true;
-
-    this.display = this.availableDisplays[0];    
-    this.sortBy = this.elementSortableProperties[0].prop;
-    this._sortOrder = null;
-    this.sortOrder(this.availableSortOrders[0]);
+ElementsEditorController.prototype.init = function(datasetManager) {
+    this.dataset = datasetManager.currentSet;
 
     this.selectedElement = null;
     this.newElement = this.dataset.createDefaultElement();
@@ -133,29 +107,6 @@ ElementsEditorController.prototype.cloneElement = function(element) {
     var newElement = angular.copy(element.element);
     this.dataset.elements.push(newElement);
     this.initElements();
-};
-
-var orderReverseMap = {
-    'asc': false,
-    'desc': true
-};
-
-ElementsEditorController.prototype.sortOrder = function(order) {
-    if (arguments.length) {
-        if (order === 'reset') {
-            order = 'asc';
-            this.sortBy = 'index';
-        }
-
-        this._sortOrder = order;
-        if (order in orderReverseMap) {
-            this.reverse = orderReverseMap[order];
-        } else {
-            throw new Error('Invalid sort order: ' + order);
-        }
-    } else {
-        return this._sortOrder;
-    }
 };
 
 }());

@@ -11,10 +11,10 @@
             ng-style="vm.layout.getContainerCssSize()">
             <li class="element"
                 ng-if="vm.elements.length"
-                ng-repeat="element in vm.elements | orderBy: vm.sortBy : vm.reverse track by element.index"
+                ng-repeat="element in vm.elements | orderBy: vm.editor.sortBy : vm.editor.reverse track by element.index"
                 ng-class="vm.getElementClass(element)"
                 ng-click="vm.selectElement(element, $event)"
-                ng-style="vm.layout.getElementCssSize(element.element)">
+                ng-style="vm.getElementCssSize(element.element)">
                 <span class="element__index">element {{element.index}}</span>
             </li>
         </ul>
