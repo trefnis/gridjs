@@ -3,99 +3,135 @@
 
 angular
     .module('gridjs-test.editor')
-    .directive('elementsEditorArrange', elementsEditorArrangeDirective)
-    .controller('elementsEditorArrangeController', [
-        '$scope',
-        '$timeout',
-        '$window',
-        'ElementsLayout',
-        elementsEditorArrangeController
-    ]);
+    .directive('editorArrange', editorArrangeDirective)
+    .controller('EditorArrangeMenuController', [EditorArrangeMenuController])
+    .directive('editorArrangeMenu', editorArrangeMenuDirective)
+    .controller('EditorArrangeController', ['$scope', EditorArrangeController]);
 
-function elementsEditorArrangeDirective() {
+function editorArrangeMenuDirective() {
     return {
-        templateUrl: 'elements-editor/layout/preview.html',
+        templateUrl: 'editor/layout/arrange-menu.html',
         scope: {
-            elements: '=',
+            dataset: '=',
+            availableUnits: '=',
+            getStep: '=',
+            resetNewElement: '=',
+            arrange: '='
+        },
+        controller: 'EditorArrangeMenuController',
+        bindToController: true,
+        controllerAs: 'menu'
+    };
+}
+
+function EditorArrangeMenuController() {
+    if (!this.arrange) {
+        this.arrange = {};
+    }
+    var arrange = this.arrange;
+
+    arrange.zoom = 1;
+    arrange.width = 600;
+
+    this.adjustZoomAfterScaleChange = function() {
+        if (!arrange.shouldScaleDown) {
+            arrange.zoom = 1;
+        }
+    };
+}
+
+function editorArrangeDirective() {
+    return {
+        templateUrl: 'editor/layout/arrange.html',
+        scope: {
+            // elements: '=',
             selectElement: '=',
             selectedElementIndex: '=',
             units: '=',
-            display: '=',
-            availableDisplays: '=',
-            sortBy: '=',
-            sortOrder: '=',
-            availableSortOrders: '=',
-            elementSortableProperties: '=',
-            reverse: '=',
-            sortGlyphicons: '=',
-            gridContainerWidth: '=',
-            shouldScaleDown: '=',
-            zoom: '=',
+            arrange: '=',
         },
-        link: function(scope, element, attributes, controller) {
-            controller.init(scope);
-        },
-        controller: 'elementsEditorArrangeController',
+        controller: 'EditorArrangeController',
         controllerAs: 'vm',
         bindToController: true,
     };
 }
 
-function elementsEditorArrangeController($scope, $timeout, $window, ElementsLayout) {
-    this.actualContainerWidth = null;
-    this.readWidth = null;
+function EditorArrangeController($scope) {
+    this._adjustZoomThrottled = null;
 
-    this.gridContainerWidth = 700;
-    this.shouldScaleDown = false;
-    this.zoom = 1;
+    this.arrange.zoom = this.arrange.zoom || 1;
 
-    this.init = this.init.bind(this, ElementsLayout);
+    this.elements = [
+        {index: 1, width: 200, height: 200, left: 600, top: 200},
+        {index: 2, width: 200, height: 600, left: 200, top: 800},
+        {index: 3, width: 400, height: 300, left: 200, top: 1200},
+        {index: 4, width: 600, height: 200, left: 0, top: 0},
+    ];
 }
 
-ElementsEditorPreviewController.prototype.init = function(ElementsLayout, scope) {
-    this.layout = new ElementsLayout({
-        units: this.units,
-        shouldScaleDown: true,
-        getDesiredWidth: function() { return this.gridContainerWidth; }.bind(this),
-        getActualWidth: this.readWidth,
-        getElementClass: this.getElementClass.bind(this)
-    }, scope);
+EditorArrangeController.prototype.getContainerCssSize = function() {
+    this.adjustZoomThrottled();
 
-    scope.$on('$destroy', function() {
-        if (this.layout) {
-            this.layout.clear();
-        }
-    });
+    var width = this.getContainerWidth();
+    var maxWidth = this.getContainerMaxWidth();
+    var height = this.getContainerHeight();
+
+    return {
+        width: width,
+        'max-width': maxWidth,
+        height: height,
+    };
 };
 
-ElementsEditorPreviewController.prototype.getElementClass = function(element) {
+EditorArrangeController.prototype.getContainerWidth = function() {
+    return this.arrange.shouldScaleDown ?
+        '100%' :
+        this.arrange.width * this.arrange.zoom + this.units.width;
+};
+
+EditorArrangeController.prototype.getContainerHeight = function() {
+    var farthestElement = _.max(this.elements, distance);
+    var height = Math.floor(distance(farthestElement) * this.arrange.zoom);
+    return height + this.units.height;
+};
+
+EditorArrangeController.prototype.getContainerMaxWidth = function() {
+    return this.arrange.shouldScaleDown ? this.arrange.width + 'px' : 'auto';
+};
+
+EditorArrangeController.prototype.adjustZoom = function() {
+    if (this.arrange.shouldScaleDown) {
+        var zoom = this.readWidth() / this.arrange.width;
+        this.arrange.zoom = zoom < 1 ? zoom : 1;
+    }
+};
+
+EditorArrangeController.prototype.adjustZoomThrottled = 
+    _.throttle(EditorArrangeController.prototype.adjustZoom, 20);
+
+EditorArrangeController.prototype.getElementClass = function(element) {
     return {
-        'element--floating': this.display === 'float', 
+        'element--positioned': true, 
         'element--selected': element.index === this.selectedElementIndex 
     };
 };
 
-var orderReverseMap = {
-    'asc': false,
-    'desc': true
+EditorArrangeController.prototype.getElementCss = function(element) {
+    var width = Math.floor(element.width * this.arrange.zoom);
+    var height = Math.floor(element.height * this.arrange.zoom);
+    var left = Math.floor(element.left * this.arrange.zoom);
+    var top = Math.floor(element.top * this.arrange.zoom);
+
+    return {
+        width: width + this.units.width,
+        height: height + this.units.height,
+        left: left + this.units.width,
+        top: top + this.units.height,
+    };
 };
 
-ElementsEditorPreviewController.prototype.sortOrder = function(order) {
-    if (arguments.length) {
-        if (order === 'reset') {
-            order = 'asc';
-            this.sortBy = 'index';
-        }
-
-        this._sortOrder = order;
-        if (order in orderReverseMap) {
-            this.reverse = orderReverseMap[order];
-        } else {
-            throw new Error('Invalid sort order: ' + order);
-        }
-    } else {
-        return this._sortOrder;
-    }
-};
+function distance(element) {
+    return element.height + element.top;
+}
 
 }());

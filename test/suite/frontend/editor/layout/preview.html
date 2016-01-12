@@ -7,11 +7,10 @@
 
         <ul class="element-list clearfix"
             read-width
-            save-width-reader-to="vm.readWidth"
-            ng-style="vm.layout.getContainerCssSize()">
+            save-width-reader-to="vm.readWidth">
             <li class="element"
                 ng-if="vm.elements.length"
-                ng-repeat="element in vm.elements | orderBy: vm.editor.sortBy : vm.editor.reverse track by element.index"
+                ng-repeat="element in vm.elements | orderBy: vm.preview.sortBy : vm.preview.reverse track by element.index"
                 ng-class="vm.getElementClass(element)"
                 ng-click="vm.selectElement(element, $event)"
                 ng-style="vm.getElementCssSize(element.element)">

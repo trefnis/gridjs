@@ -1,6 +1,5 @@
-<div class="row elements-editor">
-    <h1>{{vm.scopePass.one}}</h1>
-    <div class="col-lg-5 elements-editor__tab">
+<div class="row editor">
+    <div class="col-lg-5 editor__tab">
         <div class="editor__tab-content editor__tab-content--layout"
 
             editor-preview
@@ -9,16 +8,39 @@
             selected-element-index="vm.getSelectedElementIndex()"
             units="vm.dataset.units"
             
-            editor="vm.editor"
+            preview="vm.preview"
             
         ></div>
     </div>
     <div class="col-lg-5 editor__tab">
-        <div ng-include="'editor/layout/arrange.html'" 
-            class="editor__tab-content"></div>
+        <div class="editor__tab-content editor__tab-content--layout absolute-container"
+
+            editor-arrange
+            elements="vm.elements"
+            select-element="vm.selectElement"
+            selected-element-index="vm.getSelectedElementIndex()"
+            units="vm.dataset.units"
+            
+            arrange="vm.arrange"
+            
+        ></div>
+
+        <!-- <div ng-include="'editor/layout/arrange.html'" 
+            class="editor__tab-content"></div> -->
     </div>
+
     <div class="col-lg-2 editor__tab">
-        <div class="editor__tab-content"
-            ng-include="'editor/menu.html'"></div>
+        <div class="editor__tab-content">
+            <div ng-include="'editor/selected-element-menu.html'"></div>
+            <div ng-include="'editor/new-element-menu.html'"></div>
+            <div editor-preview-menu preview="vm.preview"></div>
+            <div editor-arrange-menu 
+                arrange="vm.arrange"
+                dataset="vm.dataset"
+                available-units="vm.units"
+                get-step="vm.getStep"
+                reset-new-element="vm.resetNewElement"></div>
+            <div ng-include="'editor/units-menu.html'"></div>
+        </div>
     </div>
 </div>

@@ -1,0 +1,67 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Arrange</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <editor-labelled-input 
+                label="Width"
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number"
+                   ng-disabled="menu.dataset.units.width === menu.availableUnits.percent"
+                   ng-model="menu.arrange.width"
+                   ng-change="menu.arrange.calculateContainerRatio(menu.dataset.width)"
+                   step="{{menu.getStep(menu.dataset.units.width)}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{menu.dataset.units.width}}
+                </span>
+            </editor-labelled-input>
+            <editor-labelled-input
+                label="Column width" 
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number" 
+                   ng-model="menu.dataset.columnWidth"
+                   ng-change="menu.resetNewElement()"
+                   step="{{menu.getStep(menu.dataset.units.width)}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{menu.dataset.units.width}}
+                </span>
+            </editor-labelled-input>
+            <editor-labelled-input 
+                label="Row height" 
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number" 
+                   ng-model="menu.dataset.rowHeight"
+                   ng-change="menu.resetNewElement()"
+                   step="{{menu.getStep(menu.dataset.units.height)}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{menu.dataset.units.height}}
+                </span>
+            </editor-labelled-input>
+            <editor-labelled-input 
+                label="Zoom"
+                classes="input-single">
+                <input class="form-control"
+                   type="number"
+                   ng-model="menu.arrange.zoom"
+                   ng-readonly="menu.arrange.shouldScaleDown"
+                   step="0.1"
+                   min="0">
+            </editor-labelled-input> 
+            <div class="col-lg-offset-3 col-lg-9 checkbox">
+                <label class="control-label">
+                    <input type="checkbox"
+                        ng-change="menu.adjustZoomAfterScaleChange()"
+                        ng-model="menu.arrange.shouldScaleDown"></label>
+                   Scale down to fit visual container
+                </label>
+            </div>
+        </form>
+    </div>
+</div>

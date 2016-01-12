@@ -1,0 +1,32 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Units</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <editor-labelled-input 
+                label="Width units" 
+                classes="input-single">
+                <select class="form-control"
+                   ng-model="vm.dataset.units.width"
+                   ng-options="unit for unit in vm.availableUnits"
+                   ng-change="vm.recalculateSizes ? recalculateWidths() : angular.noop"></select>
+            </editor-labelled-input>
+            <editor-labelled-input 
+                label="Height units" 
+                classes="input-single">
+                <select class="form-control"
+                   ng-model="vm.dataset.units.height" 
+                   ng-options="unit for unit in vm.availableUnits">
+               </select>
+            </editor-labelled-input>
+            <div class="col-lg-offset-3 col-lg-9 checkbox">
+                <label>
+                    <input type="checkbox"
+                        ng-model="vm.recalculateSizes">
+                   Recalculate sizes on unit change
+                </label>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,33 +1,22 @@
-<div class="panel panel-default">
-    <div class="panel-body">
-        
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam modi deleniti necessitatibus hic totam, repudiandae voluptatem temporibus nesciunt qui expedita porro quos nostrum voluptas, fugit possimus laborum nihil accusamus unde.
+<div class="panel panel-default absolute-container"
+    read-width
+    save-width-reader-to="vm.readWidth">
+    <div class="panel-body panel-body--absolute-content absolute-container"
+        ng-click="vm.selectElement(null, $event)">
+        <div ng-if="!vm.elements.length">
+            <p>There are no elements yet.</p>
+        </div>
 
-        <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum unde nemo, quam quis dolore eveniet soluta sed debitis enim aliquid, perspiciatis modi assumenda possimus iure. Ipsum accusantium explicabo repellat eveniet.</div>
-        <div>Eius error eveniet debitis, aliquid quos suscipit ratione itaque dicta omnis culpa quam, minima ipsa, commodi eaque illo nisi temporibus quis? Quam officia deserunt hic nemo laboriosam neque ad dolores?</div>
-        <div>Totam est voluptate necessitatibus, a maxime fugit quas veritatis numquam magni, tempora praesentium officia cupiditate non repellendus. Neque illo ratione pariatur quidem beatae voluptatem, expedita laborum commodi explicabo vel cupiditate!</div>
-        <div>Commodi, sint, quam? Provident quas ab, alias aspernatur vitae minus dolorum ea corporis eius distinctio dolore nisi enim placeat numquam accusamus rerum, quibusdam voluptatibus obcaecati dolores amet. Enim, officia ratione.</div>
-        <div>Aliquid mollitia repellendus ipsa incidunt accusantium atque doloribus ab obcaecati dolores labore amet earum assumenda corporis sint ullam id, natus vero! Voluptatum veniam, corporis et tempora temporibus, iste assumenda perferendis.</div>
-        <div>Ad, ea. Nesciunt corporis, quidem harum id temporibus possimus quam mollitia, cumque natus aliquid corrupti, magni numquam, nemo excepturi odio debitis! Autem quia maiores tenetur iure, repellat earum error. Quo?</div>
-        <div>Provident perspiciatis libero excepturi quod quibusdam voluptatum vitae, mollitia ab voluptates. Dolor architecto, doloremque minus in est vero, commodi provident quod culpa iusto doloribus, ipsam quae eos animi, necessitatibus hic.</div>
-        <div>Sapiente, cumque. Sequi dolorum nulla, architecto nostrum sed labore ratione aliquid hic nisi incidunt quisquam, quidem provident! Maxime officiis praesentium quaerat consequuntur, neque, debitis nostrum accusamus quia sint excepturi, eius!</div>
-        <div>Perferendis, eveniet totam magnam ullam aut quae non molestiae repellat et consequuntur debitis obcaecati adipisci recusandae sed deleniti nemo iure necessitatibus labore, qui accusamus praesentium molestias corrupti vero! Odio, incidunt.</div>
-        <div>Ex delectus impedit, expedita excepturi id, eum earum magnam tempora nesciunt dolorem debitis modi beatae animi, voluptas accusantium! Obcaecati fugiat ullam pariatur, qui corrupti culpa blanditiis aut porro quasi esse.</div>
-        <div>Laboriosam quam necessitatibus quis ullam! Ab corporis qui ipsam inventore quam modi odio aliquam, tempora provident incidunt praesentium aut deserunt consectetur dolor, asperiores velit nihil sequi officia. Fuga, unde, architecto.</div>
-        <div>Nobis molestiae facilis veritatis nulla laudantium pariatur voluptatum, eius impedit eligendi architecto mollitia deleniti temporibus, nostrum perspiciatis consequuntur excepturi esse et enim accusantium tempore recusandae praesentium unde numquam delectus. Architecto.</div>
-        <div>Dolor enim optio aliquid fuga quasi sed! Enim nihil voluptate consequatur repudiandae obcaecati dolorum deleniti consequuntur exercitationem illum dolorem. Fuga voluptatibus laboriosam possimus rerum ducimus cum optio modi deserunt ad.</div>
-        <div>Obcaecati, fuga, maxime! Eligendi facere repellat dignissimos laudantium odio quia ipsam similique fuga doloremque doloribus ad, mollitia culpa debitis iusto veniam reiciendis esse dolorum quisquam dolores et aspernatur, officiis autem.</div>
-        <div>Sint consequuntur illum porro dicta. Illo in, minus harum ipsa voluptate est, voluptates accusantium ipsam veniam voluptas numquam, quibusdam impedit nihil doloribus error rerum mollitia officia cumque sapiente optio tempora?</div>
-        <div>Veniam ut iusto provident, obcaecati commodi maiores ad nesciunt optio, nobis iste vitae sit. Maiores dolores vel, voluptatibus maxime modi. Vel consectetur reiciendis explicabo possimus maxime consequuntur, delectus sint corporis?</div>
-        <div>Neque aliquam possimus dignissimos quasi blanditiis distinctio ducimus tempora. Non repellendus, ut tenetur. Similique nihil impedit aliquid. Nisi, doloremque, ullam! Est neque molestiae omnis, soluta porro nihil quaerat! Saepe, animi.</div>
-        <div>Veniam laudantium unde veritatis tempore, alias corrupti perspiciatis facere, reprehenderit consequatur mollitia ut ipsa perferendis magni sapiente quaerat aliquam possimus cumque autem. Suscipit aliquid dolorum incidunt, nulla culpa natus ducimus.</div>
-        <div>Quos doloremque laboriosam quo, in quam, facilis animi aspernatur, molestias modi dicta similique non! Blanditiis, enim sunt unde delectus soluta temporibus modi voluptas dolores, eius nihil eveniet animi eaque fugit.</div>
-        <div>Velit distinctio sequi vel ducimus, praesentium quam provident magni fugiat iste reiciendis. Harum alias voluptate esse nobis, similique quia iure ab nam vel perspiciatis! Deleniti autem tenetur alias, neque voluptatem.</div>
+        <ul class="element-list element-list--arrange clearfix"
+            ng-style="vm.getContainerCssSize()">
+            <li class="element"
+                ng-if="vm.elements.length"
+                ng-repeat="element in vm.elements track by element.index"
+                ng-class="vm.getElementClass(element)"
+                ng-click="vm.selectElement(element, $event)"
+                ng-style="vm.getElementCss(element)">
+                <span class="element__index">element {{element.index}}</span>
+            </li>
+        </ul>
     </div>
 </div>

@@ -1,0 +1,62 @@
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h3 class="panel-title">
+            <span class="panel-title--vertical-centered">Selected element</span>
+            <span class="panel-title__right-corner">
+                <button type="button" 
+                    ng-disabled="!vm.selectedElement"
+                    ng-click="vm.removeElement(vm.selectedElement)" 
+                    class="btn btn-default text-center">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                <button type="button"
+                    ng-disabled="!vm.selectedElement"
+                    ng-click="vm.cloneElement(vm.selectedElement)"
+                    class="btn btn-default text-center">
+                    <span class="glyphicon glyphicon-duplicate"></span>
+                </button>
+            </span>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <editor-labelled-input 
+                label="Width" 
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number"
+                   ng-disabled="!vm.selectedElement" 
+                   ng-model="vm.selectedElement.element.width" 
+                   step="{{vm.dataset.columnWidth}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.width}}
+                </span>
+            </editor-labelled-input>
+            <editor-labelled-input 
+                label="Height" 
+                classes="input-group input-group-sm">
+                <input class="form-control"
+                   type="number"
+                   ng-disabled="!vm.selectedElement"
+                   ng-model="vm.selectedElement.element.height" 
+                   step="{{vm.dataset.rowHeight}}"
+                   min="0" />
+                <span class="input-group-addon">
+                    {{vm.dataset.units.height}}
+                </span>
+            </editor-labelled-input>
+            <editor-labelled-input 
+                label="Index" 
+                classes="input-single">
+                <input class="form-control"
+                   type="number"
+                   ng-disabled="!vm.selectedElement"
+                   ng-model-options="{ getterSetter: true, debounce: 1000 }"
+                   ng-model="vm.selectedElementIndex"
+                   min="0"
+                   max="{{vm.dataset.elements.length - 1}}"/>
+            </editor-labelled-input>
+        </form>
+    </div>
+</div>

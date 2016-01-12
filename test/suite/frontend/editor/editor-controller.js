@@ -16,8 +16,10 @@ function EditorController($scope, $rootScope, datasetManager,
     this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
 
-    // Let the editor directive fill all props.
-    this.editor = {};
+    // Let the preview & arrange directives fill all its props.
+    this.preview = {};
+    this.arrange = {};
+
     this.init(datasetManager);
     
     $rootScope.$on('newCurrentSet', function(event, newCurrentSet) {
@@ -45,6 +47,7 @@ function EditorController($scope, $rootScope, datasetManager,
     };
 
     this.selectElement = this.selectElement.bind(this);
+    this.resetNewElement = this.resetNewElement.bind(this);
 }
 
 EditorController.prototype.init = function(datasetManager) {
@@ -94,6 +97,10 @@ EditorController.prototype.setSelectedElementIndex = function(newIndex) {
 EditorController.prototype.addNewElement = function(element) {
     this.dataset.elements.push(element);
     this.initElements();
+    this.newElement = this.dataset.createDefaultElement();
+};
+
+EditorController.prototype.resetNewElement = function() {
     this.newElement = this.dataset.createDefaultElement();
 };
 
