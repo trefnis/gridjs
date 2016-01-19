@@ -12,6 +12,11 @@ angular
             templateUrl: 'editor/labelled-input.html',
             attributes: ['label', 'classes']
         });
-    }]);
+    }])
+    .filter('arranged', function() {
+        return function(elements, shouldTakeArranged) {
+            return _.filter(elements, { element: { isArranged: shouldTakeArranged } });
+        };
+    });
 
 }());

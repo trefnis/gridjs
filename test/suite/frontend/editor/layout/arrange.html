@@ -11,11 +11,42 @@
             ng-style="vm.getContainerCssSize()">
             <li class="element"
                 ng-if="vm.elements.length"
-                ng-repeat="element in vm.elements track by element.index"
+                ng-repeat="element in vm.elements | arranged:true"
                 ng-class="vm.getElementClass(element)"
                 ng-click="vm.selectElement(element, $event)"
-                ng-style="vm.getElementCss(element)">
-                <span class="element__index">element {{element.index}}</span>
+                ng-style="vm.getElementCss(element.element)">
+                <div class="element__content">
+                    <div>element {{element.index}}</div>
+                    <button type="button"
+                        ng-show="vm.selectedElementIndex === element.index"
+                        ng-click="vm.arrange.removeItem(element.element)">
+                        Edit
+                    </button>
+                </div>
+                <button type="button"
+                    class="element__move element__move--left" 
+                    ng-click="vm.moveElement('left', element.element)"
+                    ng-show="vm.selectedElementIndex === element.index && vm.canMove('left', element.element)">
+                    <span class="glyphicon glyphicon-arrow-left" />
+                </button>
+                <button type="button"
+                    class="element__move element__move--top" 
+                    ng-click="vm.moveElement('top', element.element)"
+                    ng-show="vm.selectedElementIndex === element.index && vm.canMove('top', element.element)">
+                    <span class="glyphicon glyphicon-arrow-up" />
+                </button>
+                <button type="button"
+                    class="element__move element__move--right" 
+                    ng-click="vm.moveElement('right', element.element)"
+                    ng-show="vm.selectedElementIndex === element.index && vm.canMove('right', element.element)">
+                    <span class="glyphicon glyphicon-arrow-right" />
+                </button>
+                <button type="button"
+                    class="element__move element__move--bottom" 
+                    ng-click="vm.moveElement('bottom', element.element)"
+                    ng-show="vm.selectedElementIndex === element.index && vm.canMove('bottom', element.element)">
+                    <span class="glyphicon glyphicon-arrow-down" />
+                </button>
             </li>
         </ul>
     </div>

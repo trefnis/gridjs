@@ -101,11 +101,40 @@
     position: absolute;
 }
 
-.element__index {
+.element__content {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+}
+
+.element__move {
+    position: absolute;
+    width: 30px;
+}
+
+.element__move--left {
+    left: -50px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.element__move--top {
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.element__move--right {
+    right: -50px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.element__move--bottom {
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .absolute-container {

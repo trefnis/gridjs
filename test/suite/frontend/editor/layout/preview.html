@@ -10,11 +10,17 @@
             save-width-reader-to="vm.readWidth">
             <li class="element"
                 ng-if="vm.elements.length"
-                ng-repeat="element in vm.elements | orderBy: vm.preview.sortBy : vm.preview.reverse track by element.index"
+                ng-repeat="element in vm.elements | orderBy: vm.preview.sortBy : vm.preview.reverse | arranged:false"
                 ng-class="vm.getElementClass(element)"
                 ng-click="vm.selectElement(element, $event)"
                 ng-style="vm.getElementCssSize(element.element)">
-                <span class="element__index">element {{element.index}}</span>
+                <div class="element__content">
+                    <div>element {{element.index}}</div>
+                    <button type="button"
+                        ng-show="vm.selectedElementIndex === element.index"
+                        ng-click="vm.arrange.addItem(element.element)" >Arrange
+                    </button>
+                </div>
             </li>
         </ul>
     </div>

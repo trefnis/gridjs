@@ -39,6 +39,9 @@ Dataset.prototype.createDefaultElement = function() {
     return {
         width: this.columnWidth,
         height: this.rowHeight,
+        top: null,
+        left: null,
+        isArranged: false,
     };
 };
 
