@@ -15,7 +15,7 @@ angular
     }])
     .filter('arranged', function() {
         return function(elements, shouldTakeArranged) {
-            return _.filter(elements, { element: { isArranged: shouldTakeArranged } });
+            return _.filter(elements, { isArranged: shouldTakeArranged });
         };
     });
 

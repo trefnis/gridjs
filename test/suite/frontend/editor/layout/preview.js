@@ -30,8 +30,8 @@ function editorPreviewMenuController() {
     preview.availableSortOrders = ['asc', 'desc', 'reset'];
     preview.elementSortableProperties = [
         { label: 'index', prop: 'index' },
-        { label: 'width', prop: 'element.width' },
-        { label: 'height', prop: 'element.height' }
+        { label: 'width', prop: 'width' },
+        { label: 'height', prop: 'height' }
     ];
     preview.sortGlyphicons = {
         'asc': 'glyphicon-sort-by-attributes',

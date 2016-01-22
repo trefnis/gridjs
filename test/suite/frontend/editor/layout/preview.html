@@ -6,22 +6,25 @@
         </div>
 
         <ul class="element-list clearfix"
+            ng-if="vm.elements.length"
             read-width
             save-width-reader-to="vm.readWidth">
             <li class="element"
-                ng-if="vm.elements.length"
                 ng-repeat="element in vm.elements | orderBy: vm.preview.sortBy : vm.preview.reverse | arranged:false"
                 ng-class="vm.getElementClass(element)"
                 ng-click="vm.selectElement(element, $event)"
-                ng-style="vm.getElementCssSize(element.element)">
+                ng-style="vm.getElementCssSize(element)">
                 <div class="element__content">
                     <div>element {{element.index}}</div>
                     <button type="button"
                         ng-show="vm.selectedElementIndex === element.index"
-                        ng-click="vm.arrange.addItem(element.element)" >Arrange
+                        ng-click="vm.arrange.addItem(element)" >Arrange
                     </button>
                 </div>
             </li>
         </ul>
     </div>
 </div>
+
+
+<!-- ng-repeat="element in vm.elements | orderBy: vm.preview.sortBy : vm.preview.reverse | arranged:false" -->

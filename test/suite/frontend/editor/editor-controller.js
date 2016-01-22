@@ -59,11 +59,9 @@ EditorController.prototype.init = function(datasetManager) {
 };
 
 EditorController.prototype.initElements = function() {
-    this.elements = this.dataset.elements.map(function(el, index) {
-        return {
-            index: index,
-            element: el
-        };
+    this.elements = this.dataset.elements.map(function(element, index) {
+        element.index = index;
+        return element;
     });
 };
 
@@ -111,7 +109,7 @@ EditorController.prototype.removeElement = function(element) {
 };
 
 EditorController.prototype.cloneElement = function(element) {
-    var newElement = angular.copy(element.element);
+    var newElement = angular.copy(element);
     this.dataset.elements.push(newElement);
     this.initElements();
 };

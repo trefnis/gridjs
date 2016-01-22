@@ -64,16 +64,6 @@ function EditorArrangeController($scope, arranged) {
 
     this.arrange.addItem = this.addItem.bind(this);
     this.arrange.removeItem = this.removeItem.bind(this);
-
-    // this.elements = [
-    //     {index: 1, width: 200, height: 200, left: 600, top: 200, isArranged: false},
-    //     {index: 2, width: 200, height: 600, left: 200, top: 800, isArranged: false},
-    //     {index: 3, width: 400, height: 300, left: 200, top: 1200, isArranged: false},
-    //     {index: 4, width: 600, height: 200, left: 0, top: 0, isArranged: true},
-    // ];
-
-    // console.log(arranged(this.elements, false));
-    // console.log(arranged(this.elements, true));
 }
 
 EditorArrangeController.prototype.getContainerCssSize = function() {
@@ -139,11 +129,13 @@ EditorArrangeController.prototype.getElementCss = function(element) {
 };
 
 EditorArrangeController.prototype.addItem = function(element) {
-    var farthestElement = _.max(this.elements, function(elem) {
-        return elem.element.top === null ? -Infinity : elem.element.top;
+    var elements = _.filter(this.elements, { isArranged: true });
+    var farthestElement = _.max(elements, function(element) {
+        return element.top + element.height;
     });
-    var top = farthestElement !== -Infinity && farthestElement.element.top !== null ?
-        farthestElement.element.top + this.dataset.rowHeight : 0;
+    var height = _.max([this.dataset.rowHeight, farthestElement.height || 0]);
+    var top = farthestElement !== -Infinity && farthestElement.top !== null ?
+        farthestElement.top + height : 0;
 
     element.left = 0;
     element.top = top;
@@ -175,54 +167,35 @@ EditorArrangeController.prototype.canMove = function(direction, element) {
     switch (direction) {
         case 'left': 
             isEdge = !(element.left > 0); 
-            moved = {
-                top: element.top,
-                left: element.left - this.dataset.columnWidth,
-                width: element.width,
-                height: element.height,
-            };
+            var movedLeft = element.left - this.dataset.columnWidth;
+            moved = _.merge({}, element, { left: movedLeft });
             break;
         case 'top': 
             isEdge = !(element.top > 0);
-            moved = {
-                top: element.top - this.dataset.rowHeight,
-                left: element.left,
-                width: element.width,
-                height: element.height,
-            };
+            var movedTop = element.top - this.dataset.rowHeight;
+            moved = _.merge({}, element, { top: movedTop });
             break;
         case 'right': 
             isEdge = !(element.left + element.width < this.arrange.width);
-            moved = {
-                top: element.top,
-                left: element.left + this.dataset.columnWidth,
-                width: element.width,
-                height: element.height,
-            };
+            var movedRight = element.left + this.dataset.columnWidth;
+            moved = _.merge({}, element, { left: movedRight });
             break;
         case 'bottom': 
             isEdge = false; 
-            moved = {
-                top: element.top + this.dataset.rowHeight,
-                left: element.left,
-                width: element.width,
-                height: element.height,
-            };
+            var movedBottom = element.top + this.dataset.rowHeight;
+            moved = _.merge({}, element, { top: movedBottom });
             break;
     }
 
     if (isEdge) return false;
 
-    console.log(moved);
-    console.log(direction);
-    var elements = _.filter(this.elements, { element: { isArranged: true } });
+    var elements = _.filter(this.elements, { isArranged: true });
     wontCollide = !willCollide(moved, elements)
 
     return wontCollide;
 };
 
 function willCollide(element, elements) {
-    //TODO get out element from elements (use index), take only arranged elements
     var overlappingElems = getHeightOverlappingElements(element, elements);
 
     if (!overlappingElems.length) return false;
@@ -234,12 +207,13 @@ function willCollide(element, elements) {
 
 function getHeightOverlappingElements(element, elements) {
     return _.filter(elements, function (otherElem) {
+        if (element.index === otherElem.index) return false;
         var doesOverlap = isOverlappingVertically({
             top: element.top,
             bottom: element.top + element.height,
         }, {
-            top: otherElem.element.top,
-            bottom: otherElem.element.top + otherElem.element.height,
+            top: otherElem.top,
+            bottom: otherElem.top + otherElem.height,
         });
         return doesOverlap;
     })
@@ -247,12 +221,13 @@ function getHeightOverlappingElements(element, elements) {
 
 function getWidthOverlappingElements(element, elements) {
     return _.filter(elements, function (otherElem) {
+        if (element.index === otherElem.index) return false;
         var doesOverlap = isOverlappingHorizontally({
             left: element.left,
             right: element.left + element.width,
         }, {
-            left: otherElem.element.left,
-            right: otherElem.element.left + otherElem.element.width,
+            left: otherElem.left,
+            right: otherElem.left + otherElem.width,
         });
         return doesOverlap;
     })
@@ -283,16 +258,8 @@ EditorArrangeController.prototype.isVerticalEdge = function(element) {
     return element.top > 0;
 };
 
-EditorArrangeController.prototype.isOnHeightAsAnyOtherElement = function(element) {
-
-};
-
-EditorArrangeController.prototype.isOnWidthAsAnyOtherElement = function(element) {
-    
-};
-
 function distance(element) {
-    return element.element.height + element.element.top;
+    return element.height + element.top;
 }
 
 }());
