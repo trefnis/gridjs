@@ -6,7 +6,7 @@ angular
     .directive('editorArrange', editorArrangeDirective)
     .controller('EditorArrangeMenuController', [EditorArrangeMenuController])
     .directive('editorArrangeMenu', editorArrangeMenuDirective)
-    .controller('EditorArrangeController', ['$scope', 'arrangedFilter', EditorArrangeController]);
+    .controller('EditorArrangeController', ['gridPattern', EditorArrangeController]);
 
 function editorArrangeMenuDirective() {
     return {
@@ -57,27 +57,32 @@ function editorArrangeDirective() {
     };
 }
 
-function EditorArrangeController($scope, arranged) {
+function EditorArrangeController(gridPattern) {
+    this.gridPattern = gridPattern;
     this._adjustZoomThrottled = null;
-
     this.arrange.zoom = this.arrange.zoom || 1;
 
     this.arrange.addItem = this.addItem.bind(this);
     this.arrange.removeItem = this.removeItem.bind(this);
 }
 
-EditorArrangeController.prototype.getContainerCssSize = function() {
+EditorArrangeController.prototype.getContainerCss = function() {
     this.adjustZoomThrottled();
 
     var width = this.getContainerWidth();
     var maxWidth = this.getContainerMaxWidth();
     var height = this.getContainerHeight();
 
-    return {
+    var gridCss = this.gridPattern.getGridCss(
+        this.dataset.columnWidth * this.arrange.zoom, 
+        this.dataset.rowHeight * this.arrange.zoom);
+
+    return _.merge(gridCss, {
         width: width,
         'max-width': maxWidth,
         height: height,
-    };
+        'min-height': '100%',
+    });
 };
 
 EditorArrangeController.prototype.getContainerWidth = function() {
@@ -94,7 +99,7 @@ EditorArrangeController.prototype.getContainerHeight = function() {
 };
 
 EditorArrangeController.prototype.getContainerMaxWidth = function() {
-    return this.arrange.shouldScaleDown ? this.arrange.width + 'px' : 'auto';
+    return this.arrange.shouldScaleDown ? this.arrange.width + 'px' : 'none';
 };
 
 EditorArrangeController.prototype.adjustZoom = function() {
