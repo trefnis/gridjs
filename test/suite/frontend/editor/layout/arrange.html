@@ -11,7 +11,7 @@
             ng-style="vm.getContainerCss()">
             <li class="element"
                 ng-if="vm.elements.length"
-                ng-repeat="element in vm.elements | arranged:true"
+                ng-repeat="element in vm.elements"
                 ng-class="vm.getElementClass(element)"
                 ng-click="vm.selectElement(element, $event)"
                 ng-style="vm.getElementCss(element)">
@@ -19,7 +19,7 @@
                     <div>element {{element.index}}</div>
                     <button type="button"
                         ng-show="vm.selectedElementIndex === element.index"
-                        ng-click="vm.arrange.removeItem(element)">
+                        ng-click="vm.editItem({ element: element })">
                         Edit
                     </button>
                 </div>

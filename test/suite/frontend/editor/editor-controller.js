@@ -5,13 +5,14 @@ angular
     .module('gridjs-test.editor')
     .controller('EditorController', [
         '$scope',
+        '$timeout',
         '$rootScope',
         'datasetManager', 
         'availableUnits',
         EditorController
     ]);
 
-function EditorController($scope, $rootScope, datasetManager,
+function EditorController($scope, $timeout, $rootScope, datasetManager,
  availableUnits) {
     this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
@@ -48,6 +49,8 @@ function EditorController($scope, $rootScope, datasetManager,
 
     this.selectElement = this.selectElement.bind(this);
     this.resetNewElement = this.resetNewElement.bind(this);
+    this.arrangeItem = this.arrangeItem.bind(this, $scope);
+    // this.arrangeItem = this.arrangeItem.bind(this, $timeout);
 }
 
 EditorController.prototype.init = function(datasetManager) {
@@ -63,6 +66,9 @@ EditorController.prototype.initElements = function() {
         element.index = index;
         return element;
     });
+
+    this.arrangedElements = _.filter(this.elements, { isArranged: true });
+    this.notArrangedElements = _.filter(this.elements, { isArranged: false });
 };
 
 EditorController.prototype.selectElement = function(element, $event) {
@@ -111,6 +117,22 @@ EditorController.prototype.removeElement = function(element) {
 EditorController.prototype.cloneElement = function(element) {
     var newElement = angular.copy(element);
     this.dataset.elements.push(newElement);
+    this.initElements();
+};
+
+EditorController.prototype.arrangeItem = function($scope, element) {
+// EditorController.prototype.arrangeItem = function($timeout, element) {
+    element.isArranged = true;
+    this.initElements();
+    this.arrange.adjustItems(this.arrangedElements);
+    // $scope.$evalAsync(this.arrange.adjustItems.bind(this.arrange));
+    // $scope.$applyAsync(this.arrange.adjustItems.bind(this.arrange));
+    // $timeout(this.arrange.adjustItems.bind(this.arrange));
+};
+
+EditorController.prototype.editItem = function(element) {
+    element.isArranged = false;
+    this.arrange.removeItem(element);
     this.initElements();
 };
 

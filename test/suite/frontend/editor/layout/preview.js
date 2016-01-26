@@ -78,7 +78,7 @@ function editorPreviewDirective() {
             selectedElementIndex: '=',
             units: '=',
             preview: '=',
-            arrange: '=',
+            arrangeItem: '&',
         },
         controller: 'EditorPreviewController',
         controllerAs: 'vm',

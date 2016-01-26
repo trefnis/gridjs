@@ -50,6 +50,7 @@ function editorArrangeDirective() {
             selectedElementIndex: '=',
             units: '=',
             arrange: '=',
+            editItem: '&',
         },
         controller: 'EditorArrangeController',
         controllerAs: 'vm',
@@ -64,6 +65,7 @@ function EditorArrangeController(gridPattern) {
 
     this.arrange.addItem = this.addItem.bind(this);
     this.arrange.removeItem = this.removeItem.bind(this);
+    this.arrange.adjustItems = this.adjustItems.bind(this);
 }
 
 EditorArrangeController.prototype.getContainerCss = function() {
@@ -133,9 +135,17 @@ EditorArrangeController.prototype.getElementCss = function(element) {
     };
 };
 
-EditorArrangeController.prototype.addItem = function(element) {
-    var elements = _.filter(this.elements, { isArranged: true });
-    var farthestElement = _.max(elements, function(element) {
+EditorArrangeController.prototype.adjustItems = function(elements) {
+    var notPositionedElements = _.filter(elements, function(element) {
+        return element.top === null;
+    });
+    var positionedElements = _.difference(elements, notPositionedElements);
+
+    _.forEach(notPositionedElements, this.addItem.bind(this, positionedElements));
+};
+
+EditorArrangeController.prototype.addItem = function(existingElements, element) {
+    var farthestElement = _.max(existingElements, function(element) {
         return element.top + element.height;
     });
     var height = _.max([this.dataset.rowHeight, farthestElement.height || 0]);
@@ -144,15 +154,11 @@ EditorArrangeController.prototype.addItem = function(element) {
 
     element.left = 0;
     element.top = top;
-
-    element.isArranged = true;
 };
 
 EditorArrangeController.prototype.removeItem = function(element) {
     element.left = null;
     element.top = null;
-
-    element.isArranged = false;
 };
 
 EditorArrangeController.prototype.moveElement = function(direction, element) {
@@ -194,8 +200,7 @@ EditorArrangeController.prototype.canMove = function(direction, element) {
 
     if (isEdge) return false;
 
-    var elements = _.filter(this.elements, { isArranged: true });
-    wontCollide = !willCollide(moved, elements)
+    wontCollide = !willCollide(moved, this.elements)
 
     return wontCollide;
 };

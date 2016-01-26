@@ -3,13 +3,13 @@
         <div class="editor__tab-content editor__tab-content--layout"
 
             editor-preview
-            elements="vm.elements"
+            elements="vm.notArrangedElements"
             select-element="vm.selectElement"
             selected-element-index="vm.getSelectedElementIndex()"
             units="vm.dataset.units"
             
             preview="vm.preview"
-            arrange="vm.arrange"
+            arrange-item="vm.arrangeItem(element)"
             
         ></div>
     </div>
@@ -18,12 +18,13 @@
 
             editor-arrange
             dataset="vm.dataset"
-            elements="vm.elements"
+            elements="vm.arrangedElements"
             select-element="vm.selectElement"
             selected-element-index="vm.getSelectedElementIndex()"
             units="vm.dataset.units"
             
             arrange="vm.arrange"
+            edit-item="vm.editItem(element)"
             
         ></div>
 
