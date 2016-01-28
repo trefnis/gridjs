@@ -4,13 +4,13 @@
             <span class="panel-title--vertical-centered">Selected element</span>
             <span class="panel-title__right-corner">
                 <button type="button" 
-                    ng-disabled="!vm.selectedElement"
+                    ng-disabled="!vm.canSelectedElementBeEdited()"
                     ng-click="vm.removeElement(vm.selectedElement)" 
                     class="btn btn-default text-center">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
                 <button type="button"
-                    ng-disabled="!vm.selectedElement"
+                    ng-disabled="!vm.canSelectedElementBeEdited()"
                     ng-click="vm.cloneElement(vm.selectedElement)"
                     class="btn btn-default text-center">
                     <span class="glyphicon glyphicon-duplicate"></span>
@@ -25,7 +25,7 @@
                 classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number"
-                   ng-disabled="!vm.selectedElement" 
+                   ng-disabled="!vm.canSelectedElementBeEdited()" 
                    ng-model="vm.selectedElement.width" 
                    step="{{vm.dataset.columnWidth}}"
                    min="0" />
@@ -38,7 +38,7 @@
                 classes="input-group input-group-sm">
                 <input class="form-control"
                    type="number"
-                   ng-disabled="!vm.selectedElement"
+                   ng-disabled="!vm.canSelectedElementBeEdited()"
                    ng-model="vm.selectedElement.height" 
                    step="{{vm.dataset.rowHeight}}"
                    min="0" />
@@ -51,7 +51,7 @@
                 classes="input-single">
                 <input class="form-control"
                    type="number"
-                   ng-disabled="!vm.selectedElement"
+                   ng-disabled="!vm.canSelectedElementBeEdited()"
                    ng-model-options="{ getterSetter: true, debounce: 1000 }"
                    ng-model="vm.selectedElementIndex"
                    min="0"

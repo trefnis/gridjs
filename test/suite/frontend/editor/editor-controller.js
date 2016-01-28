@@ -14,6 +14,7 @@ angular
 
 function EditorController($scope, $timeout, $rootScope, datasetManager,
  availableUnits) {
+    this.isRecording = false;
     this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
 
@@ -121,18 +122,63 @@ EditorController.prototype.cloneElement = function(element) {
 };
 
 EditorController.prototype.arrangeItem = function($scope, element) {
-// EditorController.prototype.arrangeItem = function($timeout, element) {
     element.isArranged = true;
     this.initElements();
     this.arrange.adjustItems(this.arrangedElements);
-    // $scope.$evalAsync(this.arrange.adjustItems.bind(this.arrange));
-    // $scope.$applyAsync(this.arrange.adjustItems.bind(this.arrange));
-    // $timeout(this.arrange.adjustItems.bind(this.arrange));
 };
 
 EditorController.prototype.editItem = function(element) {
     element.isArranged = false;
     this.arrange.removeItem(element);
+    this.initElements();
+};
+
+EditorController.prototype.toggleRecording = function() {
+    this.isRecording = !this.isRecording;
+    if (!this.isRecording) {
+        this.dataset.resetHistory();
+    } else {
+        this.saveState();
+    }
+};
+
+EditorController.prototype.saveState = function() {
+    this.dataset.addHistoryEntry();
+};
+
+EditorController.prototype.canSelectedElementBeEdited = function() {
+    return this.selectedElement && !this.isRecording;
+};
+
+EditorController.prototype.canGoBackInHistory = function() {
+    return this.isRecording && this.dataset.canGoBackInHistory();
+};
+
+EditorController.prototype.goBackInHistory = function() {
+    this.dataset.popHistoryEntry();
+    this.initElements();
+};
+
+EditorController.prototype.canGoForwardInHistory = function() {
+    return this.isRecording && this.dataset.canGoForwardInHistory();
+};
+
+EditorController.prototype.goForwardInHistory = function() {
+    this.dataset.goForwardInHistory();
+    this.initElements();
+};
+
+EditorController.prototype.goToMostRecent = function() {
+    while (this.dataset.canGoForwardInHistory()) {
+        this.dataset.goForwardInHistory();
+    }
+    this.initElements();
+};
+
+EditorController.prototype.goToOldestHistoryEntry = function() {
+    while (this.dataset.canGoBackInHistory()) {
+        this.dataset.popHistoryEntry();
+    }
     this.initElements();
 };
 
