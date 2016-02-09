@@ -1,0 +1,23 @@
+<div ng-include="'comparer/comparer-menu.html'"></div>    
+<div class="row editor">
+    <div class="col-lg-6 editor__tab">
+        <div class="editor__tab-content editor__tab-content--layout absolute-container">
+        </div>
+    </div>
+    <div class="col-lg-6 editor__tab">
+        <div class="editor__tab-content editor__tab-content--comparer"
+        read-width
+        save-width-reader-to="vm.readWidthArrangedByHand">
+            <ul class="element-list element-list--arrange clearfix"
+                ng-style="vm.getElementsByHandContainerCss()">
+                <li class="element element--positioned"
+                    ng-repeat="element in vm.elementsByHand"
+                    ng-style="vm.getElementCss(element)">
+                    <div class="element__content">
+                        <div>element {{element.index}}</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

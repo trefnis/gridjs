@@ -15,7 +15,7 @@ function initStates() {
         'comparer': {
             url: '/compare',
             templateUrl: 'comparer/comparer.html',
-            controller: 'ComparerController as comparer',
+            controller: 'ComparerController as vm',
         },
         'editor': {
             url: '/editor',
