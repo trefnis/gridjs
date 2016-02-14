@@ -52,6 +52,10 @@ EditorController.prototype.init = function(datasetManager) {
     this.selectedElement = null;
     this.newElement = this.dataset.createDefaultElement();
     this.initElements();
+
+    if (this.arrangedElements.length > 0) {
+        this.isRecording = true;
+    }
 };
 
 EditorController.prototype.initElements = function() {
@@ -138,6 +142,10 @@ EditorController.prototype.saveState = function() {
     this.dataset.addHistoryEntry();
 };
 
+EditorController.prototype.discardState = function() {
+    this.dataset.removeLastHistoryEntry();
+};
+
 EditorController.prototype.canSelectedElementBeEdited = function() {
     return this.selectedElement && !this.isRecording;
 };
@@ -161,7 +169,7 @@ EditorController.prototype.goForwardInHistory = function() {
 };
 
 EditorController.prototype.goToMostRecent = function() {
-    this.datasetManager.goToMostRecent();
+    this.dataset.goToMostRecent();
     this.initElements();
 };
 

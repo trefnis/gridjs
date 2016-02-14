@@ -25,7 +25,8 @@ function Dataset(dataset) {
     this.units = defaultSet.units || { width: units.px, height: units.px };
     this.elements =  defaultSet.elements || [];
     this.elementsHistory = defaultSet.elementsHistory || [];
-    this._currentHistoryIndex = defaultSet._currentHistoryIndex || null;
+    this._currentHistoryIndex =  '_currentHistoryIndex' in defaultSet ?
+        defaultSet._currentHistoryIndex : null;
 }
 
 Dataset.prototype.rearrangeElement = function(newIndex, oldIndex) {
@@ -93,6 +94,14 @@ Dataset.prototype.goToOldestHistoryEntry = function() {
     while (this.canGoBackInHistory()) {
         this.popHistoryEntry();
     }
+};
+
+Dataset.prototype.removeLastHistoryEntry = function() {
+    if (this._currentHistoryIndex !== this.elementsHistory.length - 1) {
+        return;
+    }
+
+    this.elementsHistory.length = this.elementsHistory.length - 1;
 };
 
 }());

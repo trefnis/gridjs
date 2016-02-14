@@ -2,16 +2,17 @@
 'use strict';
 
 angular
-    .module('gridjs-test.comparer', [])
+    .module('gridjs-test.comparer', ['gridjs-test.algorithm-adapter'])
     .controller('ComparerController', [
         'datasetManager',
         '$rootScope',
         'gridPattern', 
-        'ElementsLayout', 
+        'ElementsLayout',
+        'AlgorithmAdapter',
         ComparerController
     ]);
 
-function ComparerController(datasetManager, $rootScope, gridPattern, ElementsLayout) {
+function ComparerController(datasetManager, $rootScope, gridPattern, ElementsLayout, AlgorithmAdapter) {
     this.dataset = datasetManager.currentSet;
     this.dataset.goToOldestHistoryEntry();
 
@@ -27,6 +28,9 @@ function ComparerController(datasetManager, $rootScope, gridPattern, ElementsLay
         this.dataset.goToMostRecent();
         this.adjustZoom();
         this.initElements();
+
+        this.algorithmAdapter = new AlgorithmAdapter(this.dataset.elements);
+        this.algorithmAdapter.arrange();
     }.bind(this));
 
     this.initElements();
@@ -41,12 +45,12 @@ ComparerController.prototype.adjustZoom = function() {
     this.zoom = zoom < 1 ? zoom : 1;
 };
 
-ComparerController.prototype.getElementsByHandContainerCss = function() {
+ComparerController.prototype.getElementsContainerCss = function(elements) {
     var sizing = this.layout.getContainerCss({
         zoom: this.zoom,
         width: this.desiredWidth,
         shouldScaleDown: true,
-        elements: this.elementsByHand,
+        elements: elements,
         units: this.dataset.units,
     });
 
@@ -63,21 +67,26 @@ ComparerController.prototype.getElementCss = function(element) {
 
 ComparerController.prototype.goBackInHistory = function() {
     this.dataset.popHistoryEntry();
+    this.algorithmAdapter.stepBack();
     this.initElements();
 };
 
 ComparerController.prototype.goForwardInHistory = function() {
     this.dataset.goForwardInHistory();
+    this.algorithmAdapter.stepForward();
     this.initElements();
 };
 
 ComparerController.prototype.goToMostRecent = function() {
     this.dataset.goToMostRecent();
+    this.algorithmAdapter.arrange();
     this.initElements();
 };
 
 ComparerController.prototype.goToOldestHistoryEntry = function() {
     this.dataset.goToOldestHistoryEntry();
+    this.algorithmAdapter.reset();
     this.initElements();
 };
+
 }());
