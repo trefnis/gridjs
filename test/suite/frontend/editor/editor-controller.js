@@ -28,14 +28,6 @@ function EditorController($scope, $timeout, $rootScope, datasetManager,
         this.init(datasetManager);
     }.bind(this));
 
-    // $scope.$watch(function() {
-    //     return this.dataset.units.width;
-    // }.bind(this), function(newVal) {
-    //     if (newVal === this.units.percent) {
-    //         this.gridContainerWidth = 100;
-    //     }
-    // }.bind(this));
-
     var stepsForUnits = {};
     stepsForUnits[availableUnits.px] = 200;
     stepsForUnits[availableUnits.percent] = 10;
@@ -60,6 +52,10 @@ EditorController.prototype.init = function(datasetManager) {
     this.selectedElement = null;
     this.newElement = this.dataset.createDefaultElement();
     this.initElements();
+
+    if (this.arrangedElements.length > 0) {
+        this.isRecording = true;
+    }
 };
 
 EditorController.prototype.initElements = function() {
@@ -146,6 +142,10 @@ EditorController.prototype.saveState = function() {
     this.dataset.addHistoryEntry();
 };
 
+EditorController.prototype.discardState = function() {
+    this.dataset.removeLastHistoryEntry();
+};
+
 EditorController.prototype.canSelectedElementBeEdited = function() {
     return this.selectedElement && !this.isRecording;
 };
@@ -169,16 +169,12 @@ EditorController.prototype.goForwardInHistory = function() {
 };
 
 EditorController.prototype.goToMostRecent = function() {
-    while (this.dataset.canGoForwardInHistory()) {
-        this.dataset.goForwardInHistory();
-    }
+    this.dataset.goToMostRecent();
     this.initElements();
 };
 
 EditorController.prototype.goToOldestHistoryEntry = function() {
-    while (this.dataset.canGoBackInHistory()) {
-        this.dataset.popHistoryEntry();
-    }
+    this.dataset.goToOldestHistoryEntry();
     this.initElements();
 };
 

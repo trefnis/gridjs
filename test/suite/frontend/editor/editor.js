@@ -6,6 +6,7 @@ angular
         'gridjs-test.utils',
         'gridjs-test.dataset',
         'gridjs-test.grid-pattern',
+        'gridjs-test.layout',
     ])
     .directive('editorLabelledInput', ['transclude', 
         function(transclude) {

@@ -6,7 +6,7 @@ angular
     .directive('editorArrange', editorArrangeDirective)
     .controller('EditorArrangeMenuController', [EditorArrangeMenuController])
     .directive('editorArrangeMenu', editorArrangeMenuDirective)
-    .controller('EditorArrangeController', ['gridPattern', EditorArrangeController]);
+    .controller('EditorArrangeController', ['gridPattern', 'ElementsLayout', EditorArrangeController]);
 
 function editorArrangeMenuDirective() {
     return {
@@ -58,8 +58,9 @@ function editorArrangeDirective() {
     };
 }
 
-function EditorArrangeController(gridPattern) {
+function EditorArrangeController(gridPattern, ElementsLayout) {
     this.gridPattern = gridPattern;
+    this.layout = new ElementsLayout();
     this._adjustZoomThrottled = null;
     this.arrange.zoom = this.arrange.zoom || 1;
 
@@ -71,38 +72,56 @@ function EditorArrangeController(gridPattern) {
 EditorArrangeController.prototype.getContainerCss = function() {
     this.adjustZoomThrottled();
 
-    var width = this.getContainerWidth();
-    var maxWidth = this.getContainerMaxWidth();
-    var height = this.getContainerHeight();
+    var sizing = this.layout.getContainerCss({
+        zoom: this.arrange.zoom,
+        width: this.arrange.width,
+        shouldScaleDown: this.arrange.shouldScaleDown,
+        elements: this.elements,
+        units: this.units,
+    });
 
     var gridCss = this.gridPattern.getGridCss(
         this.dataset.columnWidth * this.arrange.zoom, 
         this.dataset.rowHeight * this.arrange.zoom);
 
-    return _.merge(gridCss, {
-        width: width,
-        'max-width': maxWidth,
-        height: height,
-        'min-height': '100%',
-    });
+    return _.merge(gridCss, sizing);
 };
 
-EditorArrangeController.prototype.getContainerWidth = function() {
-    return this.arrange.shouldScaleDown ?
-        '100%' :
-        this.arrange.width * this.arrange.zoom + this.units.width;
-};
+// EditorArrangeController.prototype.getContainerCss = function() {
+//     this.adjustZoomThrottled();
 
-EditorArrangeController.prototype.getContainerHeight = function() {
-    var farthestElement = _.max(this.elements, distance);
-    if (farthestElement === -Infinity) return '0' + this.units.height;
-    var height = Math.floor(distance(farthestElement) * this.arrange.zoom);
-    return height + this.units.height;
-};
+//     var width = this.getContainerWidth();
+//     var maxWidth = this.getContainerMaxWidth();
+//     var height = this.getContainerHeight();
 
-EditorArrangeController.prototype.getContainerMaxWidth = function() {
-    return this.arrange.shouldScaleDown ? this.arrange.width + 'px' : 'none';
-};
+//     var gridCss = this.gridPattern.getGridCss(
+//         this.dataset.columnWidth * this.arrange.zoom, 
+//         this.dataset.rowHeight * this.arrange.zoom);
+
+//     return _.merge(gridCss, {
+//         width: width,
+//         'max-width': maxWidth,
+//         height: height,
+//         'min-height': '100%',
+//     });
+// };
+
+// EditorArrangeController.prototype.getContainerWidth = function() {
+//     return this.arrange.shouldScaleDown ?
+//         '100%' :
+//         this.arrange.width * this.arrange.zoom + this.units.width;
+// };
+
+// EditorArrangeController.prototype.getContainerHeight = function() {
+//     var farthestElement = _.max(this.elements, distance);
+//     if (farthestElement === -Infinity) return '0' + this.units.height;
+//     var height = Math.floor(distance(farthestElement) * this.arrange.zoom);
+//     return height + this.units.height;
+// };
+
+// EditorArrangeController.prototype.getContainerMaxWidth = function() {
+//     return this.arrange.shouldScaleDown ? this.arrange.width + 'px' : 'none';
+// };
 
 EditorArrangeController.prototype.adjustZoom = function() {
     if (this.arrange.shouldScaleDown) {
@@ -122,18 +141,22 @@ EditorArrangeController.prototype.getElementClass = function(element) {
 };
 
 EditorArrangeController.prototype.getElementCss = function(element) {
-    var width = Math.floor(element.width * this.arrange.zoom);
-    var height = Math.floor(element.height * this.arrange.zoom);
-    var left = Math.floor(element.left * this.arrange.zoom);
-    var top = Math.floor(element.top * this.arrange.zoom);
-
-    return {
-        width: width + this.units.width,
-        height: height + this.units.height,
-        left: left + this.units.width,
-        top: top + this.units.height,
-    };
+    return this.layout.getElementCss(element, this.arrange.zoom, this.units);
 };
+
+// EditorArrangeController.prototype.getElementCss = function(element) {
+//     var width = Math.floor(element.width * this.arrange.zoom);
+//     var height = Math.floor(element.height * this.arrange.zoom);
+//     var left = Math.floor(element.left * this.arrange.zoom);
+//     var top = Math.floor(element.top * this.arrange.zoom);
+
+//     return {
+//         width: width + this.units.width,
+//         height: height + this.units.height,
+//         left: left + this.units.width,
+//         top: top + this.units.height,
+//     };
+// };
 
 EditorArrangeController.prototype.adjustItems = function(elements) {
     var notPositionedElements = _.filter(elements, function(element) {

@@ -24,8 +24,9 @@ function Dataset(dataset) {
     this.rowHeight = defaultSet.rowHeight || 200;
     this.units = defaultSet.units || { width: units.px, height: units.px };
     this.elements =  defaultSet.elements || [];
-    this.elementsHistory = [];
-    this._currentHistoryIndex = null;
+    this.elementsHistory = defaultSet.elementsHistory || [];
+    this._currentHistoryIndex =  '_currentHistoryIndex' in defaultSet ?
+        defaultSet._currentHistoryIndex : null;
 }
 
 Dataset.prototype.rearrangeElement = function(newIndex, oldIndex) {
@@ -81,6 +82,26 @@ Dataset.prototype.goForwardInHistory = function() {
         this._currentHistoryIndex++;
         this.elements = this.elementsHistory[this._currentHistoryIndex];
     }
+};
+
+Dataset.prototype.goToMostRecent = function() {
+    while (this.canGoForwardInHistory()) {
+        this.goForwardInHistory();
+    }
+};
+
+Dataset.prototype.goToOldestHistoryEntry = function() {
+    while (this.canGoBackInHistory()) {
+        this.popHistoryEntry();
+    }
+};
+
+Dataset.prototype.removeLastHistoryEntry = function() {
+    if (this._currentHistoryIndex !== this.elementsHistory.length - 1) {
+        return;
+    }
+
+    this.elementsHistory.length = this.elementsHistory.length - 1;
 };
 
 }());

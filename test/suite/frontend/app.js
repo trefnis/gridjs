@@ -10,7 +10,7 @@ angular
 
         'gridjs-test.main-menu',
         'gridjs-test.editor',
-        // 'gridjs-test.comparer',
+        'gridjs-test.comparer',
     ])
     .run(['$rootScope', '$state', function($rootScope, $state) {
         $rootScope.val = 0;
