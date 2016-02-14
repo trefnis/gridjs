@@ -43,7 +43,7 @@ function EditorController($scope, $timeout, $rootScope, datasetManager,
     this.selectElement = this.selectElement.bind(this);
     this.resetNewElement = this.resetNewElement.bind(this);
     this.arrangeItem = this.arrangeItem.bind(this, $scope);
-    // this.arrangeItem = this.arrangeItem.bind(this, $timeout);
+    this.getSelectedElement = this.getSelectedElement.bind(this);
 }
 
 EditorController.prototype.init = function(datasetManager) {
@@ -80,6 +80,10 @@ EditorController.prototype.selectedElementIndex = function(newIndex) {
     } else {
         return this.getSelectedElementIndex();
     }
+};
+
+EditorController.prototype.getSelectedElement = function() {
+    return this.selectedElement;
 };
 
 EditorController.prototype.getSelectedElementIndex = function() {
