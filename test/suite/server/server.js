@@ -9,8 +9,10 @@ let _ = require('lodash');
 let app = express();
 
 let dataSetsPath = path.join(__dirname, '../../datasets/');
+let libPath = path.join(__dirname, '../../../dist');
 
 app.use('/data', express.static(dataSetsPath));
+app.use('/lib', express.static(libPath));
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/node_modules', express.static(path.join(__dirname, '../node_modules')));
 app.use(bodyParser.json());

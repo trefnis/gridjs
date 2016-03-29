@@ -7,31 +7,42 @@ angular
         return AlgorithmAdapter;
     }]);
 
-function AlgorithmAdapter(elements) {
-    this.allElements = elements.map(function(elem) {
-        return {
-            width: elem.width,
-            height: elem.height,
-            top: null,
-            left: null,
-            isArranged: false,
-            index: elem.index
-        };
-    });
+function AlgorithmAdapter(args) {
+    this.rowHeight = args.rowHeight;
+    this.columnWidth = args.columnWidth;
+
+    this.args = args;
 
     this.currentElements = [];
-
-    window.AlgorithmAdapter = AlgorithmAdapter.prototype;
+    this.packager = new jaspis.PackingAlgorithm(args);
 }
 
 AlgorithmAdapter.prototype.arrange = function() {
-    var elem = this.allElements[0];
-    elem.top = 0;
-    elem.left = 0;
-    this.currentElements.push(elem);
+    throw new Error("Not implemented");
 };
-AlgorithmAdapter.prototype.stepForward = function() {};
-AlgorithmAdapter.prototype.stepBack = function() {};
-AlgorithmAdapter.prototype.reset = function() {};
+
+AlgorithmAdapter.prototype.stepForward = function() {
+    this.packager.stepForward();
+
+    this.currentElements = this.packager.placedElements.map(function(element) {
+        return {
+            width: element.width,
+            height: element.height,
+            top: element.rowOffset * this.rowHeight,
+            left: element.columnOffset * this.columnWidth,
+            index: element.index,
+            isArranged: true,
+        }
+    }.bind(this));
+};
+
+AlgorithmAdapter.prototype.stepBack = function() {
+    throw new Error("Not implemented");
+};
+
+AlgorithmAdapter.prototype.reset = function() {
+    this.currentElements = [];
+    this.packager = new jaspis.PackingAlgorithm(this.args);
+};
 
 }());

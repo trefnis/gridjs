@@ -13,6 +13,8 @@ angular
     ]);
 
 function ComparerController(datasetManager, $rootScope, gridPattern, ElementsLayout, AlgorithmAdapter) {
+    this.onlyAlgorithm = true;
+
     this.dataset = datasetManager.currentSet;
     this.dataset.goToOldestHistoryEntry();
 
@@ -29,8 +31,15 @@ function ComparerController(datasetManager, $rootScope, gridPattern, ElementsLay
         this.adjustZoom();
         this.initElements();
 
-        this.algorithmAdapter = new AlgorithmAdapter(this.dataset.elements);
-        this.algorithmAdapter.arrange();
+        this.algorithmAdapter = new AlgorithmAdapter({
+            elements: this.dataset.elements,
+            rowHeight: this.dataset.rowHeight,
+            columnWidth: this.dataset.columnWidth,
+            units: this.dataset.units,
+            getWidth: this.readWidthArrangedByHand,
+        });
+
+        // this.algorithmAdapter.arrange();
     }.bind(this));
 
     this.initElements();
@@ -66,25 +75,33 @@ ComparerController.prototype.getElementCss = function(element) {
 };
 
 ComparerController.prototype.goBackInHistory = function() {
-    this.dataset.popHistoryEntry();
+    if (!this.algorithmOnly) {
+        this.dataset.popHistoryEntry();
+    }
     this.algorithmAdapter.stepBack();
     this.initElements();
 };
 
 ComparerController.prototype.goForwardInHistory = function() {
-    this.dataset.goForwardInHistory();
+    if (!this.algorithmOnly) {
+        this.dataset.goForwardInHistory();
+    }
     this.algorithmAdapter.stepForward();
     this.initElements();
 };
 
 ComparerController.prototype.goToMostRecent = function() {
-    this.dataset.goToMostRecent();
+    if (!this.algorithmOnly) {
+        this.dataset.goToMostRecent();
+    }
     this.algorithmAdapter.arrange();
     this.initElements();
 };
 
 ComparerController.prototype.goToOldestHistoryEntry = function() {
-    this.dataset.goToOldestHistoryEntry();
+    if (!this.algorithmOnly) {
+        this.dataset.goToOldestHistoryEntry();
+    }
     this.algorithmAdapter.reset();
     this.initElements();
 };

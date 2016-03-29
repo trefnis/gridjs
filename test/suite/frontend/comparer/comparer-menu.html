@@ -2,28 +2,28 @@
   <form class="form-horizontal">
     <div class="btn-group btn-group-sm col-lg-5">
         <button type="button"
-            ng-disabled="!vm.dataset.canGoBackInHistory()"
+            ng-disabled="!vm.onlyAlgorithm && !vm.dataset.canGoBackInHistory()"
             ng-click="vm.goToOldestHistoryEntry()"
             class="btn btn-default">
             <span class="glyphicon glyphicon-fast-backward">
             </span>
         </button>
         <button type="button"
-            ng-disabled="!vm.dataset.canGoBackInHistory()"
+            ng-disabled="!vm.onlyAlgorithm && !vm.dataset.canGoBackInHistory()"
             ng-click="vm.goBackInHistory()"
             class="btn btn-default">
             <span class="glyphicon glyphicon-step-backward">
             </span>
         </button>
         <button type="button"
-            ng-disabled="!vm.dataset.canGoForwardInHistory()"
+            ng-disabled="!vm.onlyAlgorithm && !vm.dataset.canGoForwardInHistory()"
             ng-click="vm.goForwardInHistory()"
             class="btn btn-default">
             <span class="glyphicon glyphicon-step-forward">
             </span>
         </button>
         <button type="button"
-            ng-disabled="!vm.dataset.canGoForwardInHistory()"
+            ng-disabled="!vm.onlyAlgorithm && !vm.dataset.canGoForwardInHistory()"
             ng-click="vm.goToMostRecent()"
             class="btn btn-default">
             <span class="glyphicon glyphicon-fast-forward">
