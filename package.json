@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "browserify test/spec/*.js -d -t [ babelify --plugins=babel-plugin-transform-es2015-modules-commonjs --presets=es2015 ] > test/spec/bundled/specs.js && jasmine JASMINE_CONFIG_PATH=test/spec/support/jasmine.json test/spec/bundled/specs.js",
+    "build-tests": "browserify test/spec/*.js -d -t [ babelify --plugins=babel-plugin-transform-es2015-modules-commonjs --presets=es2015 ] > test/spec/bundled/specs.js",
+    "test": "npm run build-tests && jasmine JASMINE_CONFIG_PATH=test/spec/support/jasmine.json test/spec/bundled/specs.js",
+    "test-debug-build": "npm run build-tests && node --debug-brk node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=test/spec/support/jasmine.json test/spec/bundled/specs.js",
+    "test-debug": "npm run build-tests && node-debug node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=test/spec/support/jasmine.json test/spec/bundled/specs.js",
     "build": "browserify src/packing-algorithm.js -t [ babelify --plugins=babel-plugin-transform-es2015-modules-commonjs --presets=es2015 ] -s jaspis > dist/grid.js"
   },
   "repository": {

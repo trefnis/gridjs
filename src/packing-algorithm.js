@@ -11,7 +11,9 @@ export class PackingAlgorithm {
             height = 'px'
         } = {},
         getWidth
-    }) {
+    } = {}) {
+
+        this.elements = elements;
 
         this.placedElements = [];
         this.width = getWidth();
@@ -27,7 +29,7 @@ export class PackingAlgorithm {
                     width,
                     height,
                 }))
-            .sort(compareAscBy('columnSpan', 'index', 'rowSpan'));
+            .sort(compareAscBy('index', 'columnSpan', 'rowSpan'));
 
 
         this.possiblePlaces = [{
@@ -45,6 +47,8 @@ export class PackingAlgorithm {
         if (this.elementsToBePlaced.length <= 0) {
             return;
         }
+
+        // TODO: rename all those destructured indexes to be named as original index
 
         let { bestPossiblePlace, index: bestPossiblePlaceIndex } =
             this.calculateBestPossiblePlace(this.possiblePlaces);
@@ -89,8 +93,6 @@ export class PackingAlgorithm {
                 const gap = this.positionGapAtPlace(bestPossiblePlace, possiblePlaces);
                 gaps.push(gap);
                 
-                // // TODO: Check if it is needed
-                // leaves.push(gap);
 
                 possiblePlaces.splice(bestPossiblePlaceIndex, 1);
                 // TODO: check if there is possibility to last with no possible places
@@ -102,12 +104,20 @@ export class PackingAlgorithm {
             placedElements.push(positionedElement);
             elementsToBePlaced.splice(elementThatFitsIndex, 1);
 
-            // let closedLeaves = this.getElementsClosedByPlacedElement(placedElement, leaves);
-            // leaves = leaves.filter(leaf => !closedLeaves.some(closedLeaf => closedLeaf === leaf));
-            // leaves.push(positionedElement);
-
             possiblePlaces = this.calculateNewPossiblePlaces(possiblePlaces, positionedElement);
         }
+
+        var elements = new Array(this.elements.length);
+        return placedElements.reduce((elements, element) => {
+            elements[element.index] = {
+                top: element.rowOffset * this.rowHeight,
+                left: element.columnOffset * this.columnWidth,
+                width: element.width,
+                height: element.height,
+                index: element.index,
+            };
+            return elements;
+        }, elements);
     }
 
     calculateBestPossiblePlace(possiblePlaces) {
@@ -119,21 +129,31 @@ export class PackingAlgorithm {
             return { bestPossiblePlace: possiblePlaces[0], index: 0 };
         }
 
+        const guard = {
+            bestPossiblePlace: {
+                rowOffset: Number.MAX_VALUE,
+                columnOffset: Number.MAX_VALUE,
+            },
+            index: null
+        };
+
         return possiblePlaces.reduce((currentBest, candidate, i) => {
-            const betterPlace = lesser(currentBest, candidate, 'rowOffset', 'columnOffset');
-            return betterPlace === currentBest ?
-                { bestPossiblePlace: currentBest, index: i - 1 } :
+            const betterPlace = lesser(currentBest.bestPossiblePlace, candidate, 'rowOffset', 'columnOffset');
+            return betterPlace === currentBest.bestPossiblePlace ?
+                currentBest :
                 { bestPossiblePlace: candidate, index: i };
-        });
+        }, guard);
     }
 
     findElementThatFits(elements, place) {
-        // Assume that elements are sorted by width, index
+        // Assume that elements are sorted by index then width
         for (let i = 0; i < elements.length; i++) {
             if (elements[i].columnSpan <= place.columnSpan) {
                 return { element: elements[i], index: i };
             }
         }
+
+        //TODO: check if rowSpan should be checked
 
         // Nothing found.
         return { element: null };
@@ -147,16 +167,17 @@ export class PackingAlgorithm {
             columnSpan: element.columnSpan,
             width: element.width,
             height: element.height,
+            index: element.index,
         };
     }
 
     positionGapAtPlace(place, possiblePlaces) {
-        const gap = ({
-            rowOffset,
-            columnOffset,
-            rowSpan,
-            columnSpan 
-        } = place);
+        const gap = {
+            rowOffset: place.rowOffset,
+            columnOffset: place.columnOffset,
+            rowSpan: place.rowSpan,
+            columnSpan: place.columnSpan,
+        };
 
         //TODO: get row span based on closest other place that is below given place
 
@@ -168,28 +189,44 @@ export class PackingAlgorithm {
         let placeAfterPositionedElement = this.getPlaceAfterPositionedElement(positionedElement, places);
         let isPlaceAfterPositionedElementJoined = false;
 
-        const newPlaces = places.reduce((newPlaces, place) => {
+        // Handle places from most distant to closest to the top
+        const newPlaces = places.reverse().reduce((newPlaces, place) => {
             let places = newPlaces.concat([]);
 
-            if (this.isColliding(place, positionedElement)) {
-                const brokenPlaces = this.breakPlaceByPositionedElement(place, positionedElement);
-                places = places.concat(brokenPlaces);
-            }
+            const shouldBeJoined = !isPlaceAfterPositionedElementJoined && 
+                place.rowOffset === placeAfterPositionedElement.rowOffset &&
+                this.isColliding(place, placeAfterPositionedElement);
 
-            if (isPlaceAfterPositionedElementJoined) {
-                return places;
-            }
+            // Extend to places width if it's the place that's just below 
+            // (first occurence as we are iterating from top to bottom)
+            const shouldBeExtended = () => !isPlaceAfterPositionedElementJoined && 
+                place.rowOffset < placeAfterPositionedElement.rowOffset &&
+                this.isColliding(place, placeAfterPositionedElement);
 
-            if (this.hasJoin(place, placeAfterPositionedElement)) {
+            if (shouldBeJoined) {
                 isPlaceAfterPositionedElementJoined = true;
-                places = places.concat(this.joinPlaces(place, placeAfterPositionedElement));
-            } else if (this.isColliding(place, placeAfterPositionedElement)) {
-                // We assume that possible places are sorted by rowOffset ascending
-                // so this is the first place before place after positioned element
-                // and we can extend new place to closest but closer to begin place's width
+                // As we join both of the places we should return here
+                // and don't let place to be yield
+                return places.concat(this.joinPlaces(place, placeAfterPositionedElement));
+            } else if (shouldBeExtended()) {
                 placeAfterPositionedElement.columnSpan = place.columnSpan;
+                placeAfterPositionedElement.columnOffset = place.columnOffset;
                 places.push(placeAfterPositionedElement);
                 isPlaceAfterPositionedElementJoined = true;
+            }
+
+            // TODO: check if would collide on the edge
+            //  __
+            // |  |
+            // ;```````
+            // (is this condition needed) place.rowOffset < placeAfterPositionedElement.rowOffset
+            const shouldBeBroken = this.isColliding(place, positionedElement);
+
+            if (shouldBeBroken) {
+                const brokenPlaces = this.breakPlaceByPositionedElement(place, positionedElement);
+                places = places.concat(brokenPlaces);
+            } else {
+                places = places.concat([place]);
             }
 
             return places;
@@ -200,17 +237,18 @@ export class PackingAlgorithm {
         if (!isPlaceAfterPositionedElementJoined) {
             placeAfterPositionedElement.columnSpan = this.columnsNumber;
             placeAfterPositionedElement.columnOffset = 0;
-            newPlaces.push(placeAfterPositionedElement);
+            newPlaces.unshift(placeAfterPositionedElement);
+            // newPlaces.push(placeAfterPositionedElement);
         }
 
-        return newPlaces;
+        return newPlaces.reverse();
     }
 
     isColliding(element, otherElement) {
         const isBetween = (value, firstEdge, secondEdge) => 
             value > firstEdge && value < secondEdge;
 
-        const doesContain = (x1, x2, y1, y2) => y1 <= x1 && y2 >= x2;
+        const doesContain = (x1, x2, y1, y2) => x1 <= y1 && x2 >= y2;
 
         const horizontalEdges = (element) => ({
             left: element.columnOffset,
@@ -225,8 +263,8 @@ export class PackingAlgorithm {
         const isCollidingAtAxis = (xFirstEdge, xSecondEdge, yFirstEdge, ySecondEdge) =>
             isBetween(yFirstEdge, xFirstEdge, xSecondEdge) ||
             isBetween(ySecondEdge, xFirstEdge, xSecondEdge) ||
-            doesContain(xSecondEdge, ySecondEdge, xFirstEdge, yFirstEdge) ||
-            doesContain(xFirstEdge, yFirstEdge, xSecondEdge, ySecondEdge);
+            doesContain(xFirstEdge, xSecondEdge, yFirstEdge, ySecondEdge) ||
+            doesContain(yFirstEdge, ySecondEdge, xFirstEdge, xSecondEdge);
 
         const { left: leftEdge, right: rightEdge } = horizontalEdges(element);
         const { left: otherLeftEdge, right: otherRightEdge } = horizontalEdges(otherElement);
@@ -237,14 +275,24 @@ export class PackingAlgorithm {
             && isCollidingAtAxis(topEdge, bottomEdge, otherTopEdge, otherBottomEdge);
     }
 
-    hasJoin(firstPlace, secondPlace) {
-        //TODO: refactor
-        const isBetween = (value, firstEdge, secondEdge) => 
-            value > firstEdge && value < secondEdge;
+    joinPlaces(firstPlace, secondPlace) {
+        const firstPlaceRightEdge = firstPlace.columnOffset + firstPlace.columnSpan;
+        const secondPlaceRightEdge = secondPlace.columnOffset + secondPlace.columnSpan;
 
-        return firstPlace.rowOffset === secondPlace.rowOffset &&
-            (isBetween(firstPlace.columnOffset, secondPlace.columnOffset, secondPlace.columnOffset + secondPlace.columnSpan) ||
-            isBetween(firstPlace.columnOffset + firstPlace.columnSpan, secondPlace.columnOffset, secondPlace.columnOffset + secondPlace.columnSpan))
+        const leftPlace = lesser(firstPlace, secondPlace, 'columnOffset');
+        const rightPlace = firstPlaceRightEdge > secondPlaceRightEdge ? firstPlace : secondPlace;
+
+        const rowOffset = firstPlace.rowOffset; // should be same for both
+        const columnOffset = leftPlace.columnOffset;
+        const rowSpan = Number.MAX_VALUE;
+        const columnSpan = (rightPlace.columnOffset + rightPlace.columnSpan) - leftPlace.columnOffset;
+
+        return {
+            rowOffset,
+            columnOffset,
+            rowSpan,
+            columnSpan,
+        };
     }
 
     breakPlaceByPositionedElement(place, positionedElement) {

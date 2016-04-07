@@ -1,19 +1,19 @@
 export { compareAscBy, compareDescBy, lesser, greater };
 
 function greater(a, b, ...props) {
-    return compareDescBy(...props)(a, b) === 1 ? a : b;
-}
-
-function lesser(a, b, ...props) {
     return compareAscBy(...props)(a, b) === 1 ? a : b;
 }
 
+function lesser(a, b, ...props) {
+    return compareDescBy(...props)(a, b) === 1 ? a : b;
+}
+
 function compareAscBy(...props) {
-    return (a, b) => -(comparer(props)(a, b));
+    return comparer(props);
 }
 
 function compareDescBy(...props) {
-    return comparer(props);
+    return (a, b) => -(comparer(props)(a, b));
 }
 
 function comparer(props) {
