@@ -7,14 +7,14 @@ angular
         '$scope',
         '$timeout',
         '$rootScope',
-        'datasetManager', 
+        'datasetManager',
         'availableUnits',
         EditorController
     ]);
 
 function EditorController($scope, $timeout, $rootScope, datasetManager,
  availableUnits) {
-    this.isRecording = false;
+    // this.isRecording = false;
     this.units = availableUnits;
     this.availableUnits = availableUnits.toArray();
 
@@ -23,9 +23,11 @@ function EditorController($scope, $timeout, $rootScope, datasetManager,
     this.arrange = {};
 
     this.init(datasetManager);
-    
+
     $rootScope.$on('newCurrentSet', function(event, newCurrentSet) {
+        if (newCurrentSet)
         this.init(datasetManager);
+        this.goToMostRecent();
     }.bind(this));
 
     var stepsForUnits = {};
@@ -48,6 +50,8 @@ function EditorController($scope, $timeout, $rootScope, datasetManager,
 
 EditorController.prototype.init = function(datasetManager) {
     this.dataset = datasetManager.currentSet;
+
+    this.isRecording = this.dataset.elementsHistory.length > 0;
 
     this.selectedElement = null;
     this.newElement = this.dataset.createDefaultElement();
@@ -134,12 +138,13 @@ EditorController.prototype.editItem = function(element) {
 };
 
 EditorController.prototype.toggleRecording = function() {
-    this.isRecording = !this.isRecording;
-    if (!this.isRecording) {
+    if (this.isRecording) {
         this.dataset.resetHistory();
     } else {
         this.saveState();
     }
+
+    this.isRecording = !this.isRecording;
 };
 
 EditorController.prototype.saveState = function() {

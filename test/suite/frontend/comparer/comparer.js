@@ -6,50 +6,65 @@ angular
     .controller('ComparerController', [
         'datasetManager',
         '$rootScope',
-        'gridPattern', 
+        'gridPattern',
         'ElementsLayout',
         'AlgorithmAdapter',
+        '$timeout',
         ComparerController
     ]);
 
-function ComparerController(datasetManager, $rootScope, gridPattern, ElementsLayout, AlgorithmAdapter) {
-    this.onlyAlgorithm = true;
+function ComparerController(datasetManager, $rootScope, gridPattern, ElementsLayout, AlgorithmAdapter, $timeout) {
+    this.$timeout = $timeout;
 
     this.dataset = datasetManager.currentSet;
-    this.dataset.goToOldestHistoryEntry();
-
     this.gridPattern = gridPattern;
     this.layout = new ElementsLayout();
 
-    // Default value.
-    this.desiredWidth = this.dataset.columnWidth * 3;
+    this.desiredWidth = this.dataset.width;
+
+    this.init(AlgorithmAdapter);
 
     $rootScope.$on('newCurrentSet', function(event, newCurrentSet) {
         this.dataset = newCurrentSet;
-        // this.dataset.goToOldestHistoryEntry();
-        this.dataset.goToMostRecent();
-        this.adjustZoom();
-        this.initElements();
-
-        this.algorithmAdapter = new AlgorithmAdapter({
-            elements: this.dataset.elements,
-            rowHeight: this.dataset.rowHeight,
-            columnWidth: this.dataset.columnWidth,
-            units: this.dataset.units,
-            getWidth: this.readWidthArrangedByHand,
-        });
-
-        // this.algorithmAdapter.arrange();
+        this.init(AlgorithmAdapter);
     }.bind(this));
-
-    this.initElements();
 }
+
+ComparerController.prototype.init = function(AlgorithmAdapter) {
+    this.desiredWidth = this.dataset.width;
+
+    this.dataset.goToMostRecent();
+    this.initElements();
+
+    this.algorithmAdapter = new AlgorithmAdapter({
+        elements: this.dataset.elements,
+        rowHeight: this.dataset.rowHeight,
+        columnWidth: this.dataset.columnWidth,
+        units: this.dataset.units,
+        getWidth: function() {
+            return this.desiredWidth;
+        }.bind(this),
+    });
+
+    this.algorithmAdapter.arrange();
+
+    this.adjustZoom();
+};
 
 ComparerController.prototype.initElements = function() {
     this.elementsByHand = _.filter(this.dataset.elements, { isArranged: true });
 };
 
 ComparerController.prototype.adjustZoom = function() {
+    if (!this.readWidthArrangedByHand) {
+        this.$timeout(function() {
+            this.adjustZoom();
+            this.readWidthArrangedByHand = this.readWidthArrangedByHand
+                || function() { return this.desiredWidth; };
+        }.bind(this), 20);
+        return;
+    }
+
     var zoom = this.readWidthArrangedByHand() / this.desiredWidth;
     this.zoom = zoom < 1 ? zoom : 1;
 };
@@ -64,7 +79,7 @@ ComparerController.prototype.getElementsContainerCss = function(elements) {
     });
 
     var gridCss = this.gridPattern.getGridCss(
-        this.dataset.columnWidth * this.zoom, 
+        this.dataset.columnWidth * this.zoom,
         this.dataset.rowHeight * this.zoom);
 
     return _.merge(gridCss, sizing);
@@ -75,33 +90,25 @@ ComparerController.prototype.getElementCss = function(element) {
 };
 
 ComparerController.prototype.goBackInHistory = function() {
-    if (!this.algorithmOnly) {
-        this.dataset.popHistoryEntry();
-    }
+    this.dataset.popHistoryEntry();
     this.algorithmAdapter.stepBack();
     this.initElements();
 };
 
 ComparerController.prototype.goForwardInHistory = function() {
-    if (!this.algorithmOnly) {
-        this.dataset.goForwardInHistory();
-    }
+    this.dataset.goForwardInHistory();
     this.algorithmAdapter.stepForward();
     this.initElements();
 };
 
 ComparerController.prototype.goToMostRecent = function() {
-    if (!this.algorithmOnly) {
-        this.dataset.goToMostRecent();
-    }
+    this.dataset.goToMostRecent();
     this.algorithmAdapter.arrange();
     this.initElements();
 };
 
 ComparerController.prototype.goToOldestHistoryEntry = function() {
-    if (!this.algorithmOnly) {
-        this.dataset.goToOldestHistoryEntry();
-    }
+    this.dataset.goToOldestHistoryEntry();
     this.algorithmAdapter.reset();
     this.initElements();
 };

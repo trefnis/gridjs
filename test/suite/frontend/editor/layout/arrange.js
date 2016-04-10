@@ -36,7 +36,6 @@ function EditorArrangeMenuController() {
     var arrange = this.arrange;
 
     arrange.zoom = 1;
-    arrange.width = 600;
 
     this.adjustZoomAfterScaleChange = function() {
         if (!arrange.shouldScaleDown) {
@@ -82,14 +81,14 @@ EditorArrangeController.prototype.getContainerCss = function() {
 
     var sizing = this.layout.getContainerCss({
         zoom: this.arrange.zoom,
-        width: this.arrange.width,
+        width: this.dataset.width,
         shouldScaleDown: this.arrange.shouldScaleDown,
         elements: this.elements,
         units: this.units,
     });
 
     var gridCss = this.gridPattern.getGridCss(
-        this.dataset.columnWidth * this.arrange.zoom, 
+        this.dataset.columnWidth * this.arrange.zoom,
         this.dataset.rowHeight * this.arrange.zoom);
 
     return _.merge(gridCss, sizing);
@@ -97,18 +96,18 @@ EditorArrangeController.prototype.getContainerCss = function() {
 
 EditorArrangeController.prototype.adjustZoom = function() {
     if (this.arrange.shouldScaleDown) {
-        var zoom = this.readWidth() / this.arrange.width;
+        var zoom = this.readWidth() / this.dataset.width;
         this.arrange.zoom = zoom < 1 ? zoom : 1;
     }
 };
 
-EditorArrangeController.prototype.adjustZoomThrottled = 
+EditorArrangeController.prototype.adjustZoomThrottled =
     _.throttle(EditorArrangeController.prototype.adjustZoom, 20);
 
 EditorArrangeController.prototype.getElementClass = function(element) {
     return {
-        'element--positioned': true, 
-        'element--selected': element.index === this.selectedElementIndex 
+        'element--positioned': true,
+        'element--selected': element.index === this.selectedElementIndex
     };
 };
 
@@ -157,23 +156,23 @@ EditorArrangeController.prototype.canMove = function(direction, element) {
     var moved = null;
 
     switch (direction) {
-        case 'left': 
-            isEdge = !(element.left > 0); 
+        case 'left':
+            isEdge = !(element.left > 0);
             var movedLeft = element.left - this.dataset.columnWidth;
             moved = _.merge({}, element, { left: movedLeft });
             break;
-        case 'top': 
+        case 'top':
             isEdge = !(element.top > 0);
             var movedTop = element.top - this.dataset.rowHeight;
             moved = _.merge({}, element, { top: movedTop });
             break;
-        case 'right': 
-            isEdge = !(element.left + element.width < this.arrange.width);
+        case 'right':
+            isEdge = !(element.left + element.width < this.dataset.width);
             var movedRight = element.left + this.dataset.columnWidth;
             moved = _.merge({}, element, { left: movedRight });
             break;
-        case 'bottom': 
-            isEdge = false; 
+        case 'bottom':
+            isEdge = false;
             var movedBottom = element.top + this.dataset.rowHeight;
             moved = _.merge({}, element, { top: movedBottom });
             break;
@@ -190,7 +189,7 @@ function willCollide(element, elements) {
     var overlappingElems = getHeightOverlappingElements(element, elements);
 
     if (!overlappingElems.length) return false;
-    
+
     overlappingElems = getWidthOverlappingElements(element, overlappingElems);
 
     return overlappingElems.length > 0;
@@ -241,8 +240,8 @@ function isOverlappingHorizontally(elem, otherElem) {
 }
 
 EditorArrangeController.prototype.isHorizontalEdge = function(element) {
-    return element.left > 0 && 
-        element.left + element.width < this.arrange.width;
+    return element.left > 0 &&
+        element.left + element.width < this.dataset.width;
 };
 
 EditorArrangeController.prototype.isVerticalEdge = function(element) {

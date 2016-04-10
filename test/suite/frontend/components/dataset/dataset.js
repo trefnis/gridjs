@@ -1,8 +1,8 @@
 (function() {
 'use strict';
 
-var units = { 
-    px: 'px', 
+var units = {
+    px: 'px',
     percent: '%',
     toArray: function() {
         return [this.px, this.percent];
@@ -22,6 +22,7 @@ function Dataset(dataset) {
     this.name = defaultSet.name;
     this.columnWidth = defaultSet.columnWidth || 200;
     this.rowHeight = defaultSet.rowHeight || 200;
+    this.width = defaultSet.width || 600;
     this.units = defaultSet.units || { width: units.px, height: units.px };
     this.elements =  defaultSet.elements || [];
     this.elementsHistory = defaultSet.elementsHistory || [];

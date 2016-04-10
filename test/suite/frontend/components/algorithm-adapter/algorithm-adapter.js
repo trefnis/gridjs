@@ -18,7 +18,7 @@ function AlgorithmAdapter(args) {
 }
 
 AlgorithmAdapter.prototype.arrange = function() {
-    throw new Error("Not implemented");
+    this.currentElements = this.packager.pack();
 };
 
 AlgorithmAdapter.prototype.stepForward = function() {
@@ -37,7 +37,8 @@ AlgorithmAdapter.prototype.stepForward = function() {
 };
 
 AlgorithmAdapter.prototype.stepBack = function() {
-    throw new Error("Not implemented");
+    // throw new Error("Not implemented");
+    console.error('Unable to step back. Not implemented in algorithm');
 };
 
 AlgorithmAdapter.prototype.reset = function() {
