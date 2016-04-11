@@ -128,7 +128,11 @@ EditorArrangeController.prototype.addItem = function(existingElements, element) 
     var farthestElement = _.max(existingElements, function(element) {
         return element.top + element.height;
     });
-    var height = _.max([this.dataset.rowHeight, farthestElement.height || 0]);
+    var rowHeight = this.dataset.rowHeight;
+
+    var farthestElementHeight = Math.ceil(farthestElement.height / rowHeight) * rowHeight;
+
+    var height = _.max([rowHeight, farthestElementHeight || 0]);
     var top = farthestElement !== -Infinity && farthestElement.top !== null ?
         farthestElement.top + height : 0;
 
