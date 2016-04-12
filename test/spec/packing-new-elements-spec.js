@@ -1,9 +1,5 @@
-import set from '../datasets/arranged_1.json';
-
 import { PackingAlgorithm } from '../../src/packing-algorithm';
 import { findElementThatFits } from '../../src/packager';
-
-var elems = set.elements;
 
 describe('packing elements', () => {
     describe('selecting next element', () => {
@@ -36,7 +32,6 @@ describe('packing elements', () => {
             expect(element).toEqual({ element: null });
         });
     });
-
 
     it('packs one element set in left upper corner', () => {
         const packer = new PackingAlgorithm({
@@ -93,36 +88,5 @@ describe('packing elements', () => {
         expect(packedElements[3].left).toBe(100);
 
         packedElements.forEach(element => expect(element.top).toBe(element.index === 3 ? 100 : 0));
-    });
-
-    it('packs arranged_1', () => {
-        const elements = set.elementsHistory[0];
-
-        const packer = new PackingAlgorithm({
-            columnWidth: set.columnWidth,
-            rowHeight: set.rowHeight,
-            getWidth: () => 600,
-            elements: elements,
-        });
-
-        const packedElements = packer.pack();
-
-        expect(packedElements[0].left).toBe(0);
-        expect(packedElements[0].top).toBe(0);
-
-        expect(packedElements[1].left).toBe(200);
-        expect(packedElements[1].top).toBe(0);
-
-        expect(packedElements[2].left).toBe(300);
-        expect(packedElements[2].top).toBe(0);
-
-        expect(packedElements[3].left).toBe(0);
-        expect(packedElements[3].top).toBe(200);
-
-        expect(packedElements[4].left).toBe(500);
-        expect(packedElements[4].top).toBe(0);
-
-        expect(packedElements[5].left).toBe(200);
-        expect(packedElements[5].top).toBe(100);
     });
 });
