@@ -25,6 +25,7 @@ function Dataset(dataset) {
     this.width = defaultSet.width || 600;
     this.units = defaultSet.units || { width: units.px, height: units.px };
     this.elements =  defaultSet.elements || [];
+    this.keepIndexOrder = defaultSet.keepIndexOrder || false;
     this.elementsHistory = defaultSet.elementsHistory || [];
     this._currentHistoryIndex =  '_currentHistoryIndex' in defaultSet ?
         defaultSet._currentHistoryIndex : null;

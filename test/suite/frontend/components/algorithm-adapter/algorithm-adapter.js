@@ -14,7 +14,7 @@ function AlgorithmAdapter(args) {
     this.args = args;
 
     this.currentElements = [];
-    this.packager = new jaspis.PackingAlgorithm(args);
+    this.packager = new jaspis.default(args);
 }
 
 AlgorithmAdapter.prototype.arrange = function() {
@@ -32,18 +32,17 @@ AlgorithmAdapter.prototype.stepForward = function() {
             left: element.columnOffset * this.columnWidth,
             index: element.index,
             isArranged: true,
-        }
+        };
     }.bind(this));
 };
 
 AlgorithmAdapter.prototype.stepBack = function() {
-    // throw new Error("Not implemented");
     console.error('Unable to step back. Not implemented in algorithm');
 };
 
 AlgorithmAdapter.prototype.reset = function() {
     this.currentElements = [];
-    this.packager = new jaspis.PackingAlgorithm(this.args);
+    this.packager = new jaspis.default(this.args);
 };
 
 }());

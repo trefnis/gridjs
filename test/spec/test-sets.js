@@ -1,4 +1,4 @@
-import { PackingAlgorithm } from '../../src/packing-algorithm';
+import PackingAlgorithm from '../../src/packing-algorithm';
 
 import test1 from '../datasets/test1.json';
 import test2 from '../datasets/test2.json';
@@ -20,13 +20,20 @@ const sets = [
     test8,
 ];
 
-const getArgsFromSet = (set) => {
+import keepIndexOrder_test1 from '../datasets/keepIndexOrder_test1.json';
+
+const keepIndexOrderSets = [
+    keepIndexOrder_test1,
+];
+
+const getArgsFromSet = (set, keepIndexOrder) => {
     return {
         elements: set.elements,
         columnWidth: set.columnWidth,
         rowHeight: set.rowHeight,
         units: set.units,
-        getWidth: () => set.width
+        containerWidth: set.width,
+        keepIndexOrder
     };
 };
 
@@ -37,8 +44,8 @@ const elementComparator = (element, packedElement) =>
     element.height === packedElement.height &&
     element.index === packedElement.index;
 
-const testSet = (set) => () => {
-    const packer = new PackingAlgorithm(getArgsFromSet(set));
+const testSet = ({ set, keepIndexOrder = false }) => () => {
+    const packer = new PackingAlgorithm(getArgsFromSet(set, keepIndexOrder));
 
     const packedElements = packer.pack();
     const expectedElements = set.elementsHistory[set.elementsHistory.length - 1];
@@ -51,5 +58,6 @@ beforeEach(() => {
 });
 
 describe('test set:', () => {
-    sets.forEach((set, i) => it(`test${i}`, testSet(set)));
+    sets.forEach((set, i) => it(`test${i}`, testSet({ set })));
+    keepIndexOrderSets.forEach((set, i) => it(`keepIndexOrder test${i}`, testSet({ set, keepIndexOrder: true })));
 });

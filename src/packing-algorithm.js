@@ -1,10 +1,9 @@
 import { compareAscBy, compareDescBy, greater, lesser } from './comparer';
 import { getColumnSpan, getRowSpan } from './sizing';
-// import { calculateBestPossiblePlace, calculateNewPossiblePlaces, getInitialPlaces } from './places';
 import { getInitialPlaces } from './places';
 import { calculateNewPlacesAndElements } from './packager';
 
-export class PackingAlgorithm {
+export default class PackingAlgorithm {
     constructor({
         elements = [],
         rowHeight = 10,
@@ -13,30 +12,37 @@ export class PackingAlgorithm {
             width = 'px',
             height = 'px'
         } = {},
-        getWidth
+        containerWidth,
+        keepIndexOrder = false,
+        maxIndexDifference = null
     } = {}) {
 
         this.elements = elements;
-
-        this.width = getWidth();
+        this.keepIndexOrder = keepIndexOrder;
+        this.width = containerWidth;
         this.columnWidth = columnWidth;
         this.rowHeight = rowHeight;
         this.columnsNumber = Math.floor(this.width / columnWidth);
 
         this.placedElements = [];
 
-        this.elementsToBePlaced = elements
-            .map(({ width, height, index }, arrayIndex) => ({
-                    columnSpan: getColumnSpan(width, columnWidth),
-                    rowSpan: getRowSpan(height, rowHeight),
-                    index: index || arrayIndex,
-                    width,
-                    height,
-                }))
-            .sort(compareAscBy('index', 'columnSpan', 'rowSpan'));
+        this.elementsToBePlaced = this.getElementsToBePlaced(elements);
 
         this.possiblePlaces = getInitialPlaces(this.columnsNumber);
         this.gaps = [];
+    }
+
+    getElementsToBePlaced(elements) {
+        const existingElementsCount = elements.length;
+        return elements
+            .map(({ width, height, index }, arrayIndex) => ({
+                columnSpan: getColumnSpan(width, this.columnWidth),
+                rowSpan: getRowSpan(height, this.rowHeight),
+                index: index !== undefined ? index : (arrayIndex + existingElementsCount),
+                width,
+                height,
+            }))
+            .sort(compareAscBy('index', 'columnSpan', 'rowSpan'));
     }
 
     stepForward() {
@@ -48,11 +54,22 @@ export class PackingAlgorithm {
         this.placedElements = newValues.placedElements;
     }
 
-    pack() {
+    pack(elements = []) {
+        const oldPlacedElements = this.placedElements;
+
+        if (elements.length) {
+            const newElementsToBePlaced = this.getElementsToBePlaced(elements);
+            this.elementsToBePlaced = this.elementsToBePlaced.concat(newElementsToBePlaced);
+        }
+
         while (this.elementsToBePlaced.length > 0) {
             this.stepForward();
         }
 
+        return this.positionElements();
+    }
+
+    positionElements() {
         const elements = new Array(this.elements.length);
         return this.placedElements.reduce((elements, element) => {
             elements[element.index] = {

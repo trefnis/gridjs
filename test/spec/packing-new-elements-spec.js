@@ -1,4 +1,4 @@
-import { PackingAlgorithm } from '../../src/packing-algorithm';
+import PackingAlgorithm from '../../src/packing-algorithm';
 import { findElementThatFits } from '../../src/packager';
 
 describe('packing elements', () => {
@@ -37,7 +37,7 @@ describe('packing elements', () => {
         const packer = new PackingAlgorithm({
             columnWidth: 100,
             elements: [{ width: 200, height: 200, index: 0 }],
-            getWidth: () => 1000,
+            containerWidth: 1000,
         });
         const elems = packer.pack();
 
@@ -55,7 +55,7 @@ describe('packing elements', () => {
         const packer = new PackingAlgorithm({
             columnWidth: 100,
             elements: elements,
-            getWidth: () => 1000,
+            containerWidth: 1000,
         });
         const packedElements = packer.pack();
 
@@ -78,7 +78,7 @@ describe('packing elements', () => {
             columnWidth: 100,
             rowHeight: 100,
             elements: elements,
-            getWidth: () => 1000,
+            containerWidth: 1000,
         });
         const packedElements = packer.pack();
 
@@ -88,5 +88,50 @@ describe('packing elements', () => {
         expect(packedElements[3].left).toBe(100);
 
         packedElements.forEach(element => expect(element.top).toBe(element.index === 3 ? 100 : 0));
+    });
+
+    describe('packing incrementally', () => {
+        it('packs with same result when broken into two sets as in one', () => {
+            const elements1 = [
+                { width: 200, height: 200, index: 0 },
+                { width: 400, height: 400, index: 1 },
+                { width: 400, height: 600, index: 2 },
+            ];
+
+            const elements2 = [
+                { width: 200, height: 200, index: 3 },
+                { width: 400, height: 200, index: 4 },
+                { width: 200, height: 400, index: 5 },
+                { width: 400, height: 400, index: 6 },
+                { width: 200, height: 600, index: 7 },
+                { width: 400, height: 400, index: 8 },
+            ];
+
+            const columnWidth = 200;
+            const rowHeight = 200;
+            const containerWidth = 800;
+
+            const packer = new PackingAlgorithm({
+                columnWidth,
+                rowHeight,
+                elements: elements1,
+                containerWidth,
+            });
+
+            const packedElements1 = packer.pack();
+            const packedElements2 = packer.pack(elements2);
+
+            expect(packedElements1.length).toBe(3);
+            expect(packedElements2.length).toBe(9);
+
+            const packedElementsAtOnce = new PackingAlgorithm({
+                columnWidth,
+                rowHeight,
+                elements: elements1.concat(elements2),
+                containerWidth,
+            }).pack();
+
+            expect(packedElements2).toEqual(packedElementsAtOnce);
+        });
     });
 });

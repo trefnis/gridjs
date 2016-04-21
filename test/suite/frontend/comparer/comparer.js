@@ -41,9 +41,8 @@ ComparerController.prototype.init = function(AlgorithmAdapter) {
         rowHeight: this.dataset.rowHeight,
         columnWidth: this.dataset.columnWidth,
         units: this.dataset.units,
-        getWidth: function() {
-            return this.desiredWidth;
-        }.bind(this),
+        keepIndexOrder: this.dataset.keepIndexOrder,
+        containerWidth: this.desiredWidth,
     });
 
     this.algorithmAdapter.arrange();

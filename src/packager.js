@@ -1,6 +1,6 @@
 import { calculateBestPossiblePlace, calculateNewPossiblePlaces } from './places';
 
-export function calculateNewPlacesAndElements({ elementsToBePlaced, possiblePlaces, gaps, placedElements, columnsNumber }) {
+export function calculateNewPlacesAndElements({ elementsToBePlaced, possiblePlaces, gaps, placedElements, columnsNumber, keepIndexOrder }) {
     if (elementsToBePlaced.length <= 0) {
         return;
     }
@@ -11,7 +11,7 @@ export function calculateNewPlacesAndElements({ elementsToBePlaced, possiblePlac
         calculateBestPossiblePlace(possiblePlaces);
 
     const { element: elementThatFits, index: elementThatFitsIndex } =
-        findElementThatFits(elementsToBePlaced, bestPossiblePlace);
+        findElementThatFits(elementsToBePlaced, bestPossiblePlace, keepIndexOrder);
 
     if (elementThatFits === null) {
         // TODO: add replacement
@@ -42,11 +42,13 @@ export function calculateNewPlacesAndElements({ elementsToBePlaced, possiblePlac
     };
 }
 
-export function findElementThatFits(elements, place) {
+export function findElementThatFits(elements, place, keepIndexOrder) {
+    const candidateElements = keepIndexOrder ? [elements[0]] : elements;
+
     // Assume that elements are sorted by index then width
-    for (let i = 0; i < elements.length; i++) {
-        if (elements[i].columnSpan <= place.columnSpan) {
-            return { element: elements[i], index: i };
+    for (let i = 0; i < candidateElements.length; i++) {
+        if (candidateElements[i].columnSpan <= place.columnSpan) {
+            return { element: candidateElements[i], index: i };
         }
     }
 
