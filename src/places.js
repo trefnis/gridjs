@@ -157,7 +157,7 @@ function breakPlaceByPositionedElement(place, positionedElement) {
         });
     }
 
-    const elementRightEdge = positionedElement.columnOffset + positionedElement.columnSpan
+    const elementRightEdge = positionedElement.columnOffset + positionedElement.columnSpan;
     const rightColumnSpan = (place.columnOffset + place.columnSpan) - elementRightEdge;
     if (rightColumnSpan) {
         newPlaces.push({

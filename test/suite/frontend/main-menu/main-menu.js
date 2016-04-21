@@ -27,13 +27,13 @@ function mainMenuDirective() {
     };
 }
 
-function MainMenuController($rootScope, stateNames, datasetManager, 
+function MainMenuController($rootScope, stateNames, datasetManager,
     $uibModal, dialog, loadSetDialog, messenger) {
 
     $rootScope.$on('newCurrentSet', function(event, newCurrentSet) {
         this.currentSet = newCurrentSet;
     }.bind(this));
-    
+
     this.currentSet = datasetManager.currentSet;
 
     this.navTabs = [
@@ -86,7 +86,7 @@ function MainMenuController($rootScope, stateNames, datasetManager,
             })
             .then(function(save) {
                 shouldSave = save;
-                return shouldSave 
+                return shouldSave
                     ? datasetManager.save(self.currentSet)
                     : false;
             })
@@ -119,13 +119,13 @@ function MainMenuController($rootScope, stateNames, datasetManager,
                     messenger.error('unable to load data set');
                 }
             });
-    }
+    };
 }
 
 function modalDialog($uibModal, dialog) {
     return function(text) {
         return $uibModal.open(dialog(text)).result;
-    }
+    };
 }
 
 }());

@@ -46,4 +46,4 @@ describe('comparer', () => {
             expect(lesserValue).toBe(x);
         });
     });
-})
+});

@@ -184,7 +184,7 @@ EditorArrangeController.prototype.canMove = function(direction, element) {
 
     if (isEdge) return false;
 
-    wontCollide = !willCollide(moved, this.elements)
+    wontCollide = !willCollide(moved, this.elements);
 
     return wontCollide;
 };
@@ -210,7 +210,7 @@ function getHeightOverlappingElements(element, elements) {
             bottom: otherElem.top + otherElem.height,
         });
         return doesOverlap;
-    })
+    });
 };
 
 function getWidthOverlappingElements(element, elements) {
@@ -224,7 +224,7 @@ function getWidthOverlappingElements(element, elements) {
             right: otherElem.left + otherElem.width,
         });
         return doesOverlap;
-    })
+    });
 };
 
 function isOverlappingVertically(elem, otherElem) {

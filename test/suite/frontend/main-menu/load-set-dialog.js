@@ -3,15 +3,15 @@
 
 angular
     .module('gridjs-test.main-menu')
-    .factory('loadSetDialog', 
+    .factory('loadSetDialog',
         ['$uibModal', modal])
-    .controller('LoadSetDialogController', 
+    .controller('LoadSetDialogController',
         ['$uibModalInstance', '$scope', 'setNames', LoadSetDialogController]);
 
 function modal($uibModal) {
     return function(setNames) {
         return $uibModal.open(loadSetDialog(setNames)).result;
-    } 
+    };
 }
 
 function loadSetDialog(setNames) {

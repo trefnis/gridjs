@@ -51,7 +51,6 @@ function getGridCss(width, height) {
 
     return {
         background: [horizontalLines, verticalLines, rightLine].join(',')
-        // background: [rightLine].join(',')
     };
 }
 

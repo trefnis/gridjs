@@ -18,13 +18,13 @@ function compareDescBy(...props) {
 
 function comparer(props) {
     return (a, b) => {
-        let isGreater = (x, y) => x > y;
-        let isSmaller = (x, y) => x < y;
+        const isGreater = (x, y) => x > y;
+        const isSmaller = (x, y) => x < y;
 
-        let { result: isAGreater } = compare({ isGreater, isSmaller, a, b, props });
+        const { result: isAGreater } = compare({ isGreater, isSmaller, a, b, props });
         if (isAGreater === 1) return 1;
 
-        let { result: isBGreater } = compare({
+        const { result: isBGreater } = compare({
             isGreater: isSmaller,
             isSmaller: isGreater,
             a, b, props
@@ -32,7 +32,7 @@ function comparer(props) {
         if (isBGreater === 1) return -1;
 
         return 0;
-    }
+    };
 }
 
 function compare({ isGreater, isSmaller, a, b, props }) {
