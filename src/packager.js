@@ -1,25 +1,27 @@
 import { calculateBestPossiblePlace, calculateNewPossiblePlaces } from './places';
 
-export function calculateNewPlacesAndElements({ elementsToBePlaced, possiblePlaces, gaps, placedElements, columnsNumber, keepIndexOrder }) {
+export function calculateNewPlacesAndElements({
+    elementsToBePlaced,
+    possiblePlaces,
+    gaps,
+    placedElements,
+    columnsNumber,
+    maxIndexDifference,
+}) {
     if (elementsToBePlaced.length <= 0) {
         return;
     }
-
-    // TODO: rename all those destructured indexes to be named as original index
 
     const { bestPossiblePlace, index: bestPossiblePlaceIndex } =
         calculateBestPossiblePlace(possiblePlaces);
 
     const { element: elementThatFits, index: elementThatFitsIndex } =
-        findElementThatFits(elementsToBePlaced, bestPossiblePlace, keepIndexOrder);
+        findElementThatFits(elementsToBePlaced, bestPossiblePlace, maxIndexDifference);
 
     if (elementThatFits === null) {
-        // TODO: add replacement
         const gap = positionGapAtPlace(bestPossiblePlace, possiblePlaces);
 
         possiblePlaces.splice(bestPossiblePlaceIndex, 1);
-        // TODO: check if there is possibility to last with no possible places
-        // and if there is a way to avoid or handle it
         return {
             placedElements,
             elementsToBePlaced,
@@ -42,8 +44,8 @@ export function calculateNewPlacesAndElements({ elementsToBePlaced, possiblePlac
     };
 }
 
-export function findElementThatFits(elements, place, keepIndexOrder) {
-    const candidateElements = keepIndexOrder ? [elements[0]] : elements;
+export function findElementThatFits(elements, place, maxIndexDifference) {
+    const candidateElements = elements.slice(0, maxIndexDifference);
 
     // Assume that elements are sorted by index then width
     for (let i = 0; i < candidateElements.length; i++) {

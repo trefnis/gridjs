@@ -14,15 +14,15 @@ export default class PackingAlgorithm {
         } = {},
         containerWidth,
         keepIndexOrder = false,
-        maxIndexDifference = null
+        maxIndexDifference = Infinity
     } = {}) {
 
         this.elements = elements;
-        this.keepIndexOrder = keepIndexOrder;
         this.width = containerWidth;
         this.columnWidth = columnWidth;
         this.rowHeight = rowHeight;
         this.columnsNumber = Math.floor(this.width / columnWidth);
+        this.maxIndexDifference = keepIndexOrder ? 1 : maxIndexDifference;
 
         this.placedElements = [];
 

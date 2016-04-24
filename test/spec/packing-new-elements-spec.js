@@ -91,7 +91,7 @@ describe('packing elements', () => {
     });
 
     describe('packing incrementally', () => {
-        it('packs with same result when broken into two sets as in one', () => {
+        it('packs with same result when broken into two sets as in one and keeping index order', () => {
             const elements1 = [
                 { width: 200, height: 200, index: 0 },
                 { width: 400, height: 400, index: 1 },
@@ -116,6 +116,7 @@ describe('packing elements', () => {
                 rowHeight,
                 elements: elements1,
                 containerWidth,
+                keepIndexOrder: true,
             });
 
             const packedElements1 = packer.pack();
@@ -129,6 +130,7 @@ describe('packing elements', () => {
                 rowHeight,
                 elements: elements1.concat(elements2),
                 containerWidth,
+                keepIndexOrder: true,
             }).pack();
 
             expect(packedElements2).toEqual(packedElementsAtOnce);
