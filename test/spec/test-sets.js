@@ -37,12 +37,22 @@ const getArgsFromSet = (set, keepIndexOrder) => {
     };
 };
 
-const elementComparator = (element, packedElement) =>
-    element.top === packedElement.top &&
-    element.left === packedElement.left &&
-    element.width === packedElement.width &&
-    element.height === packedElement.height &&
-    element.index === packedElement.index;
+const elementComparator = (element, packedElement) => {
+    const props = ['top', 'left', 'width', 'height', 'index'];
+
+    if (!element || !packedElement ||
+        typeof element !== 'object' ||
+        typeof packedElement !== 'object' ||
+        !props.reduce((result, prop) =>
+            result && prop in element && prop in packedElement, true)) {
+        return undefined;
+    }
+
+    const result = props.reduce((result, prop) =>
+        result && element[prop] === packedElement[prop], true);
+
+    return result;
+};
 
 const testSet = ({ set, keepIndexOrder = false }) => () => {
     const packer = new PackingAlgorithm(getArgsFromSet(set, keepIndexOrder));
@@ -58,6 +68,6 @@ beforeEach(() => {
 });
 
 describe('test set:', () => {
-    sets.forEach((set, i) => it(`test${i}`, testSet({ set })));
-    keepIndexOrderSets.forEach((set, i) => it(`keepIndexOrder test${i}`, testSet({ set, keepIndexOrder: true })));
+    sets.forEach((set, i) => it(`test${i + 1}`, testSet({ set })));
+    keepIndexOrderSets.forEach((set, i) => it(`keepIndexOrder test${i + 1}`, testSet({ set, keepIndexOrder: true })));
 });
