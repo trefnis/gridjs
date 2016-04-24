@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+    <div class="panel-body"
+        ng-click="vm.selectElement(null, $event)">
+        <div ng-if="!vm.elements.length">
+            <p>There are no elements yet.</p>
+        </div>
+
+        <ul class="element-list clearfix"
+            read-width
+            save-width-reader-to="vm.readWidth"
+            ng-style="vm.layout.getContainerCssSize()">
+            <li class="element"
+                ng-if="vm.elements.length"
+                ng-repeat="element in vm.elements | orderBy: vm.sortBy : vm.reverse track by element.index"
+                ng-class="vm.getElementClass(element)"
+                ng-click="vm.selectElement(element, $event)"
+                ng-style="vm.layout.getElementCssSize(element.element)">
+                <span class="element__index">element {{element.index}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

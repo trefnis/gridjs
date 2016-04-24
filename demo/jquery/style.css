@@ -1,0 +1,25 @@
+.container {
+    width: 1200px;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.images-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.image-list-item {
+    position: absolute;
+}
+
+.image-list-item img {
+    display: block;
+}
+
+.positioned {
+    display: block;
+    position: absolute;
+}
